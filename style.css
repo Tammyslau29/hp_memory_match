@@ -23,7 +23,7 @@
     font-family: lumos;
     color:#d3ac18;
 }
-img.hp_logo{
+.game_header > img.hp_logo{
     width: 18%;
 }
 .game_header img{
@@ -32,7 +32,10 @@ img.hp_logo{
     margin: 10px;
 }
 .game_header h1 {
-    font-size: 57px;
+    font-size: 20px;
+    position: absolute;
+    top: 5.5em;
+    left: 14em;
 }
 .game_header .game_nav, .stats_container {
     font-family: lumos;
@@ -194,5 +197,5 @@ img.hp_logo{
     outline: none;
 }
 .reset_button img{
-    width: 80%;
+    width: 61%;
 }
