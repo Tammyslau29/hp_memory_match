@@ -96,10 +96,11 @@
 }
 .card {
     width: 14%;
-    height: 150px;
+    height: 187px;
     display: inline-block;
     margin: 0px 8px 27px;
     position:relative;
+    -webkit-box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.75)
 }
 .card .back, .card .front {
     width: 100%;
