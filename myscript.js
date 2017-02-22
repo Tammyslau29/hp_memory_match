@@ -35,17 +35,21 @@ function init_firebase(){
 }
 
 function card_clicked() {
+    var first_card_status = {};
+    var second_card_status = {};
     if ($(this).find(".back").is(":visible") == false) {
     } else {
         $(this).find(".back").hide();
         if (first_card_clicked == null) {
             first_card_clicked = $(this);
             var first_card = first_card_clicked.data("position");
-            fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(true);
+            first_card_status[first_card + "/status"] = true;
+            fb_ref.ref("games_in_session/" + game_id).update(first_card_status);
         } else {
             second_card_clicked = $(this);
             var second_card = second_card_clicked.data("position");
-            fb_ref.ref("games_in_session/" + game_id + "/" + second_card + "/status").update(true);
+            second_card_status[second_card + "/status"] = true;
+            fb_ref.ref("games_in_session/" + game_id).update(second_card_status);
             attempts++;
             accuracy = (((matches/attempts)*100).toFixed(2));
             display_stats();
@@ -66,18 +70,22 @@ function card_clicked() {
                 }
             } else {
                 $(".card").unbind("click");
+                var first_card = first_card_clicked.data("position");
+                var second_card = second_card_clicked.data("position");
+                first_card_status[first_card + "/status"] = true;
+                fb_ref.ref("games_in_session/" + game_id).update(first_card_status);
+                second_card_status[second_card + "/status"] = true;
+                fb_ref.ref("games_in_session/" + game_id).update(second_card_status);
+                // fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
+                // fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
                 function time_out(){
-                    var first_card = first_card_clicked.data("position");
-                    var second_card = second_card_clicked.data("position");
-                    fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
-                    fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
                     first_card_clicked.find(".back").show();
                     second_card_clicked.find(".back").show();
                     $(".card").click(card_clicked);
                     first_card_clicked = null;
                     second_card_clicked = null;
                 }
-                setTimeout(time_out, 1000)
+                setTimeout(time_out, 2000);
                 display_stats()
             }
         }
