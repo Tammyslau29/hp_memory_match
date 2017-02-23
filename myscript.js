@@ -9,11 +9,17 @@ var games_played = 0;
 var last_spell_casted = null;
 var fb_ref;
 var game_id = null;
+var player1_score = 100;
+var player2_score = 100;
 
 $(document).ready(function(){
     init_game();
     $(".card").click(card_clicked());
     $(".reset_button").on("click",reset_button);
+    $("#winning_gif").on("click", reset_button);
+    $("#losing_gif").on("click", reset_button);
+    update_player_score(player1, 0);
+    update_player_score(player2, 0);
 });
 function init_game(){
     this.player1 = null;
@@ -33,7 +39,13 @@ function init_firebase(){
     firebase.initializeApp(config);
     fb_ref = firebase.database();
 }
-
+function read_user_spell(second_card){
+    var spell;
+    fb_ref.ref("games_in_session/" + game_id + "/" + second_card).once("value").then(function(snapshot) {
+        spell = snapshot.val().title;
+        handle_spell_damage(spell);
+    });
+}
 function card_clicked() {
     var first_card_status = {};
     var second_card_status = {};
@@ -55,6 +67,7 @@ function card_clicked() {
             display_stats();
             if (first_card_clicked.find(".front > img").attr("src") ===
                 second_card_clicked.find(".front > img").attr("src")){
+               read_user_spell(second_card);
                 display_last_card();
                 match_counter++;
                 matches++;
@@ -76,8 +89,6 @@ function card_clicked() {
                 fb_ref.ref("games_in_session/" + game_id).update(first_card_status);
                 second_card_status[second_card + "/status"] = true;
                 fb_ref.ref("games_in_session/" + game_id).update(second_card_status);
-                // fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
-                // fb_ref.ref("games_in_session/" + game_id + "/" + first_card + "/status").update(false);
                 function time_out(){
                     first_card_clicked.find(".back").show();
                     second_card_clicked.find(".back").show();
@@ -96,6 +107,15 @@ function display_stats(){
     $(".games_played .value").html(games_played);
     $(".attempts .value").html(attempts);
 }
+function update_player_score(player,score){
+    if(player == player1){
+        player1_score -= score
+        $(".your_health_score").text(player1_score);
+    }else if(player == player2){
+        player2_score -= score
+        $(".enemy_health_score").text(player2_score);
+    }
+};
 function reset_stats(){
     accuracy = 0;
     matches = 0;
@@ -103,6 +123,8 @@ function reset_stats(){
     match_counter = 0;
     display_stats();
     last_spell_casted = null;
+    player1_score = 100;
+    player2_score = 100;
 }
 function reset_button() {
     games_played++;
@@ -113,8 +135,11 @@ function reset_button() {
     second_card_clicked = null;
     $(".card").show()
     $(".card .back").show();
-    $("#winning_gif").hide()
+    $("#winning_gif").hide();
+    $("#losing_gif").hide();
     shuffle();
+    $(".your_health_score").text(player1_score);
+    $(".enemy_health_score").text(player2_score);
 }
 function shuffle() {
     var makeArray = $(".card").toArray();
@@ -144,4 +169,31 @@ function shuffle() {
 function display_last_card() {
     var last_spell_casted = second_card_clicked.find(".front > p").text();
     $(".your_last_spell .my_last_spell").html(last_spell_casted);
+}
+function auto_kill(){
+    console.log("function called");
+    $("#losing_gif").show();
+    $(".card").hide();
+}
+function handle_spell_damage(spell){
+    switch(spell){
+        case "Avada Kedavra":
+            auto_kill();
+            break;
+        case "Crucio":
+            update_player_score(player2, 7);
+            break;
+        case "Expulso":
+            update_player_score(player2, 5);
+            break;
+        case "Incendio":
+            update_player_score(player2, 4);
+            break;
+        case "Stupefy":
+            update_player_score(player2, 2);
+            break;
+        case "Expelliarmus":
+            update_player_score(player2, 2);
+            break;
+    }
 }
