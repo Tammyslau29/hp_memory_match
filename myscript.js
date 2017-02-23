@@ -11,6 +11,9 @@ var fb_ref;
 var game_id = null;
 var player1_score = 100;
 var player2_score = 100;
+var active_player;
+var player1 = 1;
+var player2 = 2;
 
 $(document).ready(function(){
     init_game();
@@ -22,13 +25,12 @@ $(document).ready(function(){
     update_player_score(player2, 0);
 });
 function init_game(){
-    this.player1 = null;
-    this.player2 = null;
+    active_player = player1;
+    check_active_player();
     init_firebase();
     shuffle();
 }
 function init_firebase(){
-    // Initialize Firebase
     var config = {
         apiKey: "AIzaSyAv9PQDq8j_Clv7S9ND9WU31YCm0l2DfU4",
         authDomain: "memory-match-96fcd.firebaseapp.com",
@@ -38,6 +40,23 @@ function init_firebase(){
     };
     firebase.initializeApp(config);
     fb_ref = firebase.database();
+}
+function check_active_player(){
+    if(active_player == player1){
+        $(".player1_icon").addClass("active_player")
+    }
+}
+function switch_players(){
+    console.log("Active player is: ", active_player);
+    if(active_player == 1){
+        active_player = 2;
+        $(".player1_icon").removeClass("active_player")
+        $(".player2_icon").addClass("active_player")
+    }else if(active_player == 2){
+        active_player = 1;
+        $(".player2_icon").removeClass("active_player");
+        $(".player1_icon").addClass("active_player")
+    }
 }
 function read_user_spell(second_card){
     var spell;
@@ -67,7 +86,8 @@ function card_clicked() {
             display_stats();
             if (first_card_clicked.find(".front > img").attr("src") ===
                 second_card_clicked.find(".front > img").attr("src")){
-               read_user_spell(second_card);
+                switch_players()
+                read_user_spell(second_card);
                 display_last_card();
                 match_counter++;
                 matches++;
@@ -82,6 +102,7 @@ function card_clicked() {
                     return;
                 }
             } else {
+                switch_players()
                 $(".card").unbind("click");
                 var first_card = first_card_clicked.data("position");
                 var second_card = second_card_clicked.data("position");
@@ -116,6 +137,15 @@ function update_player_score(player,score){
         $(".enemy_health_score").text(player2_score);
     }
 };
+function add_player_score(player, score){
+    if(player == player1){
+        player1_score += score
+        $(".your_health_score").text(player1_score);
+    }else if (player == player2){
+        player2_score += score
+        $(".enemy_health_score").text(player2_score);
+    }
+}
 function reset_stats(){
     accuracy = 0;
     matches = 0;
@@ -195,5 +225,7 @@ function handle_spell_damage(spell){
         case "Expelliarmus":
             update_player_score(player2, 2);
             break;
+        case "Liberacorpus":
+            add_player_score(player1, 1)
     }
 }

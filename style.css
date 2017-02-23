@@ -207,3 +207,10 @@
 .reset_button img{
     width: 61%;
 }
+.active_player{
+    font-size:30px;
+    color:red;
+}
+.player1_icon, .player2_icon, .current_player{
+    display:inline;
+}
