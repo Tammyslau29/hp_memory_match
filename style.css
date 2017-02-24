@@ -69,7 +69,7 @@
     text-decoration: none;
     color: white;
 }
-.your_last_spell > .my_last_spell{
+.your_last_spell > .my_last_spell, .opponent_last_spell{
     width: 100%;
     display: inline-block;
     color: darkred;

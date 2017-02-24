@@ -58,11 +58,11 @@ function switch_players(){
         $(".player1_icon").addClass("active_player")
     }
 }
-function read_user_spell(second_card){
+function read_user_spell(active_player, second_card){
     var spell;
     fb_ref.ref("games_in_session/" + game_id + "/" + second_card).once("value").then(function(snapshot) {
         spell = snapshot.val().title;
-        handle_spell_damage(spell);
+        handle_spell_damage(active_player, spell);
     });
 }
 function card_clicked() {
@@ -86,9 +86,9 @@ function card_clicked() {
             display_stats();
             if (first_card_clicked.find(".front > img").attr("src") ===
                 second_card_clicked.find(".front > img").attr("src")){
-                switch_players()
-                read_user_spell(second_card);
+                read_user_spell(active_player, second_card);
                 display_last_card();
+                switch_players()
                 match_counter++;
                 matches++;
                 accuracy = (((matches/attempts)*100).toFixed(2));
@@ -129,19 +129,19 @@ function display_stats(){
     $(".attempts .value").html(attempts);
 }
 function update_player_score(player,score){
-    if(player == player1){
+    if(player == 2){
         player1_score -= score
         $(".your_health_score").text(player1_score);
-    }else if(player == player2){
+    }else if(player == 1){
         player2_score -= score
         $(".enemy_health_score").text(player2_score);
     }
 };
 function add_player_score(player, score){
-    if(player == player1){
+    if(player == 1){
         player1_score += score
         $(".your_health_score").text(player1_score);
-    }else if (player == player2){
+    }else if (player == 2){
         player2_score += score
         $(".enemy_health_score").text(player2_score);
     }
@@ -198,34 +198,44 @@ function shuffle() {
 }
 function display_last_card() {
     var last_spell_casted = second_card_clicked.find(".front > p").text();
-    $(".your_last_spell .my_last_spell").html(last_spell_casted);
+    if(active_player == 1){
+        $(".your_last_spell .my_last_spell").html(last_spell_casted);
+    }else if(active_player == 2){
+        $(".opponents_last_spell .opponent_last_spell").html(last_spell_casted);
+    }
 }
 function auto_kill(){
     console.log("function called");
     $("#losing_gif").show();
     $(".card").hide();
 }
-function handle_spell_damage(spell){
+function handle_spell_damage(player, spell){
     switch(spell){
         case "Avada Kedavra":
             auto_kill();
             break;
         case "Crucio":
-            update_player_score(player2, 7);
+            update_player_score(player, 7);
             break;
         case "Expulso":
-            update_player_score(player2, 5);
+            update_player_score(player, 5);
             break;
         case "Incendio":
-            update_player_score(player2, 4);
+            update_player_score(player, 4);
             break;
         case "Stupefy":
-            update_player_score(player2, 2);
+            update_player_score(player, 2);
             break;
         case "Expelliarmus":
-            update_player_score(player2, 2);
+            update_player_score(player, 2);
             break;
         case "Liberacorpus":
-            add_player_score(player1, 1)
+            add_player_score(player, 1);
+            break;
+        case "Rennervate":
+            add_player_score(player,3);
+            break;
+        case "Finite Incantatum":
+            add_player_score(player, 2)
     }
 }
