@@ -194,6 +194,7 @@ function shuffle() {
         $("#game-area").append(each_card);
     }
     game_id = fb_ref.ref("games_in_session").push(database_array).key;
+    $(".game_id").text(game_id);
     $(".card").click(card_clicked);
 }
 function display_last_card() {
@@ -238,4 +239,19 @@ function handle_spell_damage(player, spell){
         case "Finite Incantatum":
             add_player_score(player, 2)
     }
+}
+function join_existing_game(){
+    $(".enter_room_key").show();
+    $(".new_game").hide();
+}
+function join_game(){
+    var game_id_input = $(".input_game_id").val();
+}
+function copyToClipboard(element) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+    $(".copy_status").show();
 }

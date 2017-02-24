@@ -34,8 +34,8 @@
 .game_header h1 {
     font-size: 20px;
     position: absolute;
-    top: 5.5em;
-    left: 14em;
+    top: 4.0em;
+    left: 2em;
 }
 .game_header .game_nav, .stats_container {
     font-family: lumos;
@@ -59,7 +59,7 @@
 .game_nav {
     vertical-align: top;
     position: absolute;
-    right: 4em;
+    right: 1em;
 }
 .game_nav ul {
     list-style-type: none;
@@ -211,6 +211,30 @@
     font-size:30px;
     color:red;
 }
-.player1_icon, .player2_icon, .current_player{
+.current_player{
     display:inline;
+    position: relative;
+    left: 1em;
+    bottom: 1em;
+}
+.player1_icon, .player2_icon{
+    display: inherit;
+}
+.enter_room_key{
+    display:none;
+}
+.game_id{
+    display: none;
+}
+.id_container, .your_game_id {
+    display: inline;
+}
+.copy_status{
+    display: none;
+    color: red;
+}
+.your_game_id{
+    position: relative;
+    bottom: 2em;
+    left: 9em;
 }
