@@ -108,13 +108,13 @@ function card_clicked() {
             } else {
                 switch_players()
                 $(".card").unbind("click");
+                var first_card = first_card_clicked.data("position");
+                var second_card = second_card_clicked.data("position");
+                first_card_status[first_card + "/status"] = false;
+                fb_ref.ref("games_in_session/" + game_id).update(first_card_status);
+                second_card_status[second_card + "/status"] = false;
+                fb_ref.ref("games_in_session/" + game_id).update(second_card_status);
                 function time_out(){
-                    var first_card = first_card_clicked.data("position");
-                    var second_card = second_card_clicked.data("position");
-                    first_card_status[first_card + "/status"] = false;
-                    fb_ref.ref("games_in_session/" + game_id).update(first_card_status);
-                    second_card_status[second_card + "/status"] = false;
-                    fb_ref.ref("games_in_session/" + game_id).update(second_card_status);
                     first_card_clicked.find(".back").show();
                     second_card_clicked.find(".back").show();
                     $(".card").click(card_clicked);
@@ -217,7 +217,7 @@ function build_card_display(card_array){
         individual_card.url = card_array[i].url;
         individual_card.title = card_array[i].title;
         individual_card.status = false;
-        card.data("position", i);
+        $(card).data("position", i);
         database_array.push(individual_card);
     }
     game_id = fb_ref.ref("games_in_session").push(database_array).key;
@@ -225,33 +225,23 @@ function build_card_display(card_array){
     $(".card").click(card_clicked);
 }
 function build_player2_dom(card_array){
-    var cards = $('.card');
+    $(".game-area").empty();
     for(var i = 0; i < card_array.length; i ++) {
-        if (cards.length > 0) {
-            if (card_array[i].status) {
-                $(cards[i]).find('.back').hide();
-            } else {
-                $(cards[i]).find('.back').show();
-            }
-        } else {
-            var img_src = card_array[i].url;
-            var img_title = card_array[i].title;
-            var card = $("<div>").addClass("card");
-            var front = $("<div>").addClass("front");
-            var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
-            var image = $("<img>").attr("src", img_src);
-            var spell = $("<p>").text(img_title).addClass("spells");
-            front.append(image);
-            front.append(spell);
-            card.append(front);
-            card.append(back);
-            card.data("position", i);
-            $("#game-area").append(card);
-            if (card_array[i].status == true) {
-                back.hide();
-            }
+        var img_src = card_array[i].url;
+        var img_title = card_array[i].title;
+        var card = $("<div>").addClass("card");
+        var front = $("<div>").addClass("front");
+        var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
+        var image = $("<img>").attr("src", img_src);
+        var spell = $("<p>").text(img_title).addClass("spells");
+        front.append(image);
+        front.append(spell);
+        card.append(front);
+        card.append(back);
+        $("#game-area").append(card);
+        if(card_array[i].status == true){
+          back.hide();
         }
-
     }
     $(".card").click(card_clicked);
 }
@@ -305,8 +295,8 @@ function join_existing_game(){
 }
 function join_game(){
     init_firebase();
-    game_id = $(".input_game_id").val();
-    fb_ref.ref("/games_in_session/" + game_id).on("value", function(snapshot){
+    var game_id_input = $(".input_game_id").val();
+    fb_ref.ref("/games_in_session/"+ "-" + game_id_input).on("value", function(snapshot){
         var card_deck = snapshot.val();
         build_player2_dom(card_deck);
     });
