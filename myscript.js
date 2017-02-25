@@ -16,19 +16,23 @@ var player1 = 1;
 var player2 = 2;
 
 $(document).ready(function(){
-    init_game();
+  choose_player_settings();
     $(".card").click(card_clicked());
     $(".reset_button").on("click",reset_button);
     $("#winning_gif").on("click", reset_button);
     $("#losing_gif").on("click", reset_button);
-    update_player_score(player1, 0);
-    update_player_score(player2, 0);
 });
+function choose_player_settings(){
+    $(".game-body").hide();
+}
 function init_game(){
+    $(".game-body").show();
     active_player = player1;
     check_active_player();
     init_firebase();
-    shuffle();
+    new_shuffle();
+    update_player_score(player1, 0);
+    update_player_score(player2, 0);
 }
 function init_firebase(){
     var config = {
@@ -167,36 +171,106 @@ function reset_button() {
     $(".card .back").show();
     $("#winning_gif").hide();
     $("#losing_gif").hide();
-    shuffle();
+    new_shuffle();
     $(".your_health_score").text(player1_score);
     $(".enemy_health_score").text(player2_score);
 }
-function shuffle() {
-    var makeArray = $(".card").toArray();
+function new_shuffle(){
+    var title;
+    var url;
+    var makeArray = [];
     var swap_card;
     var sub_card;
+    fb_ref.ref("card_info").once("value", function(snapshot){
+        var card_array = snapshot.val();
+        for(var key in card_array){
+            var card_obj = {};
+            card_obj.title = key;
+            card_obj.url =  card_array[key];
+            makeArray.push(card_obj);
+        }
+        for (var i = makeArray.length - 1; i > 0; i--) {
+            swap_card = Math.floor(Math.random() * i);
+            sub_card = makeArray[i];
+            makeArray[i] = makeArray[swap_card];
+            makeArray[swap_card] = sub_card;
+        }
+        console.log(makeArray);
+        build_card_display(makeArray)
+    })
+}
+function build_card_display(card_array){
     var database_array = [];
-    for (var i = makeArray.length - 1; i > 0; i--) {
-        swap_card = Math.floor(Math.random() * i);
-        sub_card = makeArray[i];
-        makeArray[i] = makeArray[swap_card];
-        makeArray[swap_card] = sub_card;
-    }
-    $("#game-area").empty();
-    for (var i = 0; i < makeArray.length; i++) {
+    console.log("This is card array", card_array);
+    for(var i = 0; i < card_array.length; i ++){
         var individual_card = {};
-        var each_card = makeArray[i];
-        individual_card.url = $(makeArray[i]).find(".front img").attr("src");
-        individual_card.title = $(makeArray[i]).find(".spells").html();
+        var img_src = card_array[i].url;
+        var img_title = card_array[i].title;
+        var card = $("<div>").addClass("card");
+        var front = $("<div>").addClass("front");
+        var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
+        var image = $("<img>").attr("src", img_src);
+        var spell = $("<p>").text(img_title).addClass("spells");
+        front.append(image);
+        front.append(spell);
+        card.append(front);
+        card.append(back);
+        $("#game-area").append(card);
+        individual_card.url = card_array[i].url;
+        individual_card.title = card_array[i].title;
         individual_card.status = false;
-        $(makeArray[i]).data("position", i);
+        $(card).data("position", i);
         database_array.push(individual_card);
-        $("#game-area").append(each_card);
     }
     game_id = fb_ref.ref("games_in_session").push(database_array).key;
     $(".game_id").text(game_id);
     $(".card").click(card_clicked);
 }
+function build_player2_dom(card_array){
+    for(var i = 0; i < card_array.length; i ++) {
+        var individual_card = {};
+        var img_src = card_array[i].url;
+        var img_title = card_array[i].title;
+        var card = $("<div>").addClass("card");
+        var front = $("<div>").addClass("front");
+        var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
+        var image = $("<img>").attr("src", img_src);
+        var spell = $("<p>").text(img_title).addClass("spells");
+        front.append(image);
+        front.append(spell);
+        card.append(front);
+        card.append(back);
+        $("#game-area").append(card);
+    }
+    $(".card").click(card_clicked);
+}
+// function shuffle() {
+//     new_shuffle();
+//     var makeArray = $(".card").toArray();
+//     var swap_card;
+//     var sub_card;
+//     var database_array = [];
+//     for (var i = makeArray.length - 1; i > 0; i--) {
+//         swap_card = Math.floor(Math.random() * i);
+//         sub_card = makeArray[i];
+//         makeArray[i] = makeArray[swap_card];
+//         makeArray[swap_card] = sub_card;
+//     }
+//     $("#game-area").empty();
+//     for (var i = 0; i < makeArray.length; i++) {
+//         var individual_card = {};
+//         var each_card = makeArray[i];
+//         individual_card.url = $(makeArray[i]).find(".front img").attr("src");
+//         individual_card.title = $(makeArray[i]).find(".spells").html();
+//         individual_card.status = false;
+//         $(makeArray[i]).data("position", i);
+//         database_array.push(individual_card);
+//         $("#game-area").append(each_card);
+//     }
+//     game_id = fb_ref.ref("games_in_session").push(database_array).key;
+//     $(".game_id").text(game_id);
+//     $(".card").click(card_clicked);
+// }
 function display_last_card() {
     var last_spell_casted = second_card_clicked.find(".front > p").text();
     if(active_player == 1){
@@ -245,7 +319,14 @@ function join_existing_game(){
     $(".new_game").hide();
 }
 function join_game(){
+    init_firebase();
     var game_id_input = $(".input_game_id").val();
+    fb_ref.ref("/games_in_session/"+ "-" + game_id_input).on("value", function(snapshot){
+
+        var card_deck = snapshot.val();
+        build_player2_dom(card_deck);
+    });
+    $(".game-body").show();
 }
 function copyToClipboard(element) {
     var $temp = $("<input>");

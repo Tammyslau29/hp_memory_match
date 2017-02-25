@@ -16,6 +16,15 @@
         <!--<img src="http://img11.deviantart.net/759b/i/2012/231/0/6/elder_wand_by_magnetic_flux-d5bmwso.png">-->
         <img class="hp_logo" src="http://vignette3.wikia.nocookie.net/logopedia/images/9/9c/HarryPotter.png/revision/latest?cb=20160624203951">
         <h1>and the Great Duel</h1>
+        <button type="button" onclick="join_existing_game()">Join Existing Game</button>
+        <div class="enter_room_key">
+            <p>Please enter game key to join game!</p>
+            <form>
+                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
+                <button type="button" onclick="join_game()">Join Game!</button>
+            </form>
+        </div>
+        <button type="button" class="new_game" onclick="init_game()">Start New Game</button>
         <div class="stats_container">
             <div class="games_played">
                 <div class="label">Games Played:</div>
@@ -86,168 +95,166 @@
             <img id="losing_gif" src="photo/avada_kedavra.gif"/>
         </div>
         <div id="game-area">
-            <div class="card card1">
-                <div class="front">
-                    <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRBvw41ebJAtnSWiOLMHTifFK4SBmVQ7nEOdq0hvvwH6ss_uAAH">
-                    <p class="spells">Avada Kedavra</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card2">
-                <div class="front">
-                    <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRBvw41ebJAtnSWiOLMHTifFK4SBmVQ7nEOdq0hvvwH6ss_uAAH">
-                    <p class="spells">Avada Kedavra</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card3">
-                <div class="front">
-                    <img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">
-                    <p class="spells">Expulso</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card4">
-                <div class="front">
-                    <img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">
-                    <p class="spells">Expulso</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card5">
-                <div class="front">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">
-                    <p class="spells">Incendio</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card6">
-                <div class="front">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">
-                    <p class="spells">Incendio</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card7">
-                <div class="front">
-                    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">
-                    <p class="spells">Liberacorpus</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card8">
-                <div class="front">
-                    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">
-                    <p class="spells">Liberacorpus</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card9">
-                <div class="front">
-                    <img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">
-                    <p class="spells">Stupefy</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card10">
-                <div class="front">
-                    <img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">
-                    <p class="spells">Stupefy</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card11">
-                <div class="front">
-                    <img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">
-                    <p class="spells">Rennervate</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card12">
-                <div class="front">
-                    <img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">
-                    <p class="spells">Rennervate</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card13">
-                <div class="front">
-                    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">
-                    <p class="spells">Expelliarmus</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card14">
-                <div class="front">
-                    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">
-                    <p class="spells">Expelliarmus</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card15">
-                <div class="front">
-                    <img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">
-                    <p class="spells">Crucio</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card16">
-                <div class="front">
-                    <img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">
-                    <p class="spells">Crucio</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card17">
-                <div class="front">
-                    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">
-                    <p class="spells">Finite Incantatum</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
-            <div class="card card18">
-                <div class="front">
-                    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">
-                    <p class="spells">Finite Incantatum</p>
-                </div>
-                <div class="back">
-                    <img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">
-                </div>
-            </div>
+            <!--<div class="card card1">-->
+                <!--<div class="front">-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card2">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRBvw41ebJAtnSWiOLMHTifFK4SBmVQ7nEOdq0hvvwH6ss_uAAH">-->
+                    <!--<p class="spells">Avada Kedavra</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card3">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">-->
+                    <!--<p class="spells">Expulso</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card4">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">-->
+                    <!--<p class="spells">Expulso</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card5">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">-->
+                    <!--<p class="spells">Incendio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card6">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">-->
+                    <!--<p class="spells">Incendio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card7">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">-->
+                    <!--<p class="spells">Liberacorpus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card8">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">-->
+                    <!--<p class="spells">Liberacorpus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card9">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">-->
+                    <!--<p class="spells">Stupefy</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card10">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">-->
+                    <!--<p class="spells">Stupefy</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card11">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">-->
+                    <!--<p class="spells">Rennervate</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card12">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">-->
+                    <!--<p class="spells">Rennervate</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card13">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">-->
+                    <!--<p class="spells">Expelliarmus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card14">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">-->
+                    <!--<p class="spells">Expelliarmus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card15">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">-->
+                    <!--<p class="spells">Crucio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card16">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">-->
+                    <!--<p class="spells">Crucio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card17">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">-->
+                    <!--<p class="spells">Finite Incantatum</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card18">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">-->
+                    <!--<p class="spells">Finite Incantatum</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </div>
     <audio autoplay loop>
