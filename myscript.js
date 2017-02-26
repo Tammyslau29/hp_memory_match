@@ -48,6 +48,8 @@ function init_firebase(){
 function check_active_player(){
     if(active_player == player1){
         $(".player1_icon").addClass("active_player")
+    }else{
+        $(".player2_icon").addClass("active_player")
     }
 }
 function switch_players(){
@@ -64,10 +66,21 @@ function switch_players(){
 }
 function read_user_spell(active_player, second_card){
     var spell;
+    var unchecked_spell
     fb_ref.ref("games_in_session/" + game_id + "/" + second_card).once("value").then(function(snapshot) {
-        spell = snapshot.val().title;
+        unchecked_spell = snapshot.val().title;
+        spell = strip_spell(unchecked_spell);
         handle_spell_damage(active_player, spell);
     });
+}
+function strip_spell(title){
+    var new_title = title;
+    for(var i=0; i < title.length; i++){
+        if(title[i] === "1") {
+            new_title = title.slice(0, -1);
+        }
+    }
+    return new_title
 }
 function card_clicked() {
     var first_card_status = {};
@@ -135,9 +148,11 @@ function display_stats(){
 function update_player_score(player,score){
     if(player == 2){
         player1_score -= score
+        console.log("player1 score is: ", player1_score);
         $(".your_health_score").text(player1_score);
     }else if(player == 1){
-        player2_score -= score
+        player2_score -= score;
+        console.log("Player 2 score is: ", player2_score);
         $(".enemy_health_score").text(player2_score);
     }
 };
@@ -311,6 +326,9 @@ function join_game(){
         build_player2_dom(card_deck);
     });
     $(".game-body").show();
+    check_active_player();
+    update_player_score(player1, 0);
+    update_player_score(player2, 0);
 }
 function copyToClipboard(element) {
     var $temp = $("<input>");

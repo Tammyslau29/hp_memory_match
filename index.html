@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Memory match</title>
     <title>Wizard's Guessing Game</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="myscript.js"></script>
@@ -12,15 +11,95 @@
     <link href="https://fonts.googleapis.com/css?family=Calligraffitti" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
 </head>
-<body>
-    <button type="button" onclick="join_existing_game()">Join Existing Game</button>
-    <div class="enter_room_key">
-        <p>Please enter game key to join game!</p>
-        <form>
-            <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
-            <button type="button" onclick="join_game()">Join Game!</button>
-        </form>
+<body class="guessing_game_body">
+    <header class="game_header">
+        <!--<img src="http://img11.deviantart.net/759b/i/2012/231/0/6/elder_wand_by_magnetic_flux-d5bmwso.png">-->
+        <img class="hp_logo" src="http://vignette3.wikia.nocookie.net/logopedia/images/9/9c/HarryPotter.png/revision/latest?cb=20160624203951">
+        <h1>and the Great Duel</h1>
+        <button type="button" onclick="join_existing_game()">Join Existing Game</button>
+        <div class="enter_room_key">
+            <p>Please enter game key to join game!</p>
+            <form>
+                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
+                <button type="button" onclick="join_game()">Join Game!</button>
+            </form>
+        </div>
+        <button type="button" class="new_game" onclick="init_game()">Start New Game</button>
+        <div class="stats_container">
+            <div class="games_played">
+                <div class="label">Games Played:</div>
+                <div class="value"></div>
+            </div>
+            <div class="attempts">
+                <div class="label">Attempts:</div>
+                <div class="value"></div>
+            </div>
+            <div class="accuracy">
+                <div class="label">Accuracy:</div>
+                <div class="value"></div>
+            </div>
+        </div>
+        <div class="opponent_char"></div>
+        <div class="current_player">
+            <div class="player1_icon">Player 1</div>
+            <div class="player2_icon">Player 2</div>
+        </div>
+        <div class="id_container">
+            <p class="your_game_id">Send This ID to your Player 2!</p>
+            <p class="game_id"></p>
+            <button onclick="copyToClipboard('.game_id')">Press for Game ID</button>
+            <p class="copy_status">Link was copied to your clipboard</p>
+        </div>
+        <nav class="game_nav">
+            <ul>
+                <a href="#"><li>settings</li></a>
+                <a href="about.html"><li>about</li></a>
+            </ul>
+        </nav>
+    </header>
+    <div class="game-body">
+        <div class="char_health">
+            <div class="your_health">
+                <h2>Your Health</h2>
+                <p class="your_health_score"></p>
+                <div class="your_last_spell">
+                    <p>Last Spell Casted</p>
+                    <div class="my_last_spell"></div>
+                </div>
+            </div>
+            <div class="opponent_health">
+                <h2>Opponent's Health</h2>
+                <p class="enemy_health_score"></p>
+                <div class="opponents_last_spell">
+                    <p>Last Spell Casted</p>
+                    <div class="opponent_last_spell"></div>
+                </div>
+            </div>
+            <ul class="new_spell_list">
+                <li>Spells and their results:
+                    <ul>
+                        <li>Avada Kedavra - Automatic kill and ends the game.</li>
+                        <li>Crucio - minus 7 points from opponent</li>
+                        <li>Expulso -  minus 5 points from opponent</li>
+                        <li>Incendio - minus 4 points from opponent</li>
+                        <li>Liberacorpus - adds 1 point to your health</li>
+                        <li>Stupefy - minus 2 points from opponent</li>
+                        <li>Rennervate - adds 3 points to your health</li>
+                        <li>Expelliarmus - minus 2 points from opponent</li>
+                        <li>Finite Incantatum - adds 2 points to your health</li>
+                    </ul>
+                </li>
+            </ul>
+            <button class="reset_button" type="button" class="reset"><img src="./photo/RESET.png"></button>
+            <img id="winning_gif" src="http://big.assets.huffingtonpost.com/harrypottergif.gif">
+            <img id="losing_gif" src="photo/avada_kedavra.gif"/>
+        </div>
+        <div id="game-area">
+        </div>
     </div>
-    <button type="button" class="new_game" onclick="location.href = 'gameboard.html'">Start New Game</button>
+    <audio autoplay loop>
+        <source src="./photo/5ebb3487fc8ec53df94d23e796c02755.mp3" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
 </body>
 </html>
