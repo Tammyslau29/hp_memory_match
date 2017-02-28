@@ -16,15 +16,6 @@
         <!--<img src="http://img11.deviantart.net/759b/i/2012/231/0/6/elder_wand_by_magnetic_flux-d5bmwso.png">-->
         <img class="hp_logo" src="http://vignette3.wikia.nocookie.net/logopedia/images/9/9c/HarryPotter.png/revision/latest?cb=20160624203951">
         <h1>and the Great Duel</h1>
-        <button type="button" onclick="join_existing_game()">Join Existing Game</button>
-        <div class="enter_room_key">
-            <p>Please enter game key to join game!</p>
-            <form>
-                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
-                <button type="button" onclick="join_game()">Join Game!</button>
-            </form>
-        </div>
-        <button type="button" class="new_game" onclick="init_game()">Start New Game</button>
         <div class="stats_container">
             <div class="games_played">
                 <div class="label">Games Played:</div>
@@ -57,6 +48,22 @@
             </ul>
         </nav>
     </header>
+    <button type="button" onclick="join_existing_game()">Join Existing Game</button>
+    <div class="enter_room_key">
+        <p>Please enter game key to join game!</p>
+        <form>
+            <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
+            <button type="button" onclick="join_game()">Join Game!</button>
+        </form>
+    </div>
+    <button type="button" class="new_game" onclick="load_players()">Start New Game</button>
+    <div class="chosen_character_preview">
+        <p>Choose a Character:</p>
+        <img class="character_preview" src="">
+    </div>
+    <div class="character_display">
+        <button type="button" class="start_game_btn" onclick="init_game()">Begin Game!</button>
+    </div>
     <div class="game-body">
         <div class="char_health">
             <div class="your_health">

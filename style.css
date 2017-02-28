@@ -238,3 +238,34 @@
     bottom: 2em;
     left: 9em;
 }
+.character_cont{
+    background-color: red;
+    display: inline-block;
+    transform: translate(50%,0%);
+    width: 200px;
+    margin: 10px;
+    height: 250px;
+}
+.character_img{
+   height:100%;
+    width: 100%;
+}
+.character_name{
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    color: white;
+}
+.character_display{
+    width: 72%;
+}
+.start_game_btn{
+    width: 164px;
+    height: 63px;
+    right: 14%;
+    position: absolute;
+    top: 23%;
+    font-size: 20px;
+    font-family: harryP;
+    background-color: #b54646;
+    color:white
+}

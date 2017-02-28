@@ -16,20 +16,49 @@ var player1 = 1;
 var player2 = 2;
 
 $(document).ready(function(){
-  choose_player_settings();
+    choose_player_settings();
     $(".card").click(card_clicked());
     $(".reset_button").on("click",reset_button);
     $("#winning_gif").on("click", reset_button);
     $("#losing_gif").on("click", reset_button);
 });
 function choose_player_settings(){
+    init_firebase();
     $(".game-body").hide();
+    $(".start_game_btn").hide()
+    // load_players();
+}
+function load_players(){
+    $(".start_game_btn").show();
+    $(".game-body").hide();
+    var character_obj;
+    fb_ref.ref("characters").once("value").then(function(snapshot){
+     character_obj = snapshot.val()
+        for(var character in character_obj){
+            var character_container = $("<div>").addClass("character_cont")
+            var character_img = $("<img>").attr("src", character_obj[character]).addClass("character_img");
+            var character_name = $("<p>").text(character).addClass("character_name");
+            character_container.append(character_img, character_name);
+            character_container.on("click", choose_character);
+            $(".character_display").append(character_container)
+        }
+    })
+}
+function choose_character(){
+    // $(".character_preview").attr("src", character_img);
+    $(".character_img").css("opacity", "1");
+    $(this).find(".character_img").css("opacity", "0.6");
+}
+function add_players_to_fb(){
+    var player_obj = {
+        player1: null,
+        player2: null
+    }
 }
 function init_game(){
     $(".game-body").show();
     active_player = player1;
     check_active_player();
-    init_firebase();
     new_shuffle();
     update_player_score(player1, 0);
     update_player_score(player2, 0);
@@ -67,7 +96,7 @@ function switch_players(){
 function read_user_spell(active_player, second_card){
     var spell;
     var unchecked_spell
-    fb_ref.ref("games_in_session/" + game_id + "/" + second_card).once("value").then(function(snapshot) {
+    fb_ref.ref("games_in_session/" + game_id + "/" + second_card).once("value").then(function(snapshot){
         unchecked_spell = snapshot.val().title;
         spell = strip_spell(unchecked_spell);
         handle_spell_damage(active_player, spell);
@@ -155,7 +184,8 @@ function update_player_score(player,score){
         console.log("Player 2 score is: ", player2_score);
         $(".enemy_health_score").text(player2_score);
     }
-};
+}
+
 function add_player_score(player, score){
     if(player == 1){
         player1_score += score
@@ -239,6 +269,7 @@ function build_card_display(card_array){
     $(".game_id").text(game_id);
     $(".card").click(card_clicked);
 }
+
 function build_player2_dom(card_array){
     var cards = $('.card');
     for(var i = 0; i < card_array.length; i ++) {
