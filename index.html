@@ -32,8 +32,8 @@
         </div>
         <div class="opponent_char"></div>
         <div class="current_player">
-            <div class="player1_icon">Player 1</div>
-            <div class="player2_icon">Player 2</div>
+            <div class="player1_icon"></div>
+            <div class="player2_icon"></div>
         </div>
         <div class="id_container">
             <p class="your_game_id">Send This ID to your Player 2!</p>
@@ -48,18 +48,19 @@
             </ul>
         </nav>
     </header>
-    <button type="button" onclick="join_existing_game()">Join Existing Game</button>
-    <div class="enter_room_key">
-        <p>Please enter game key to join game!</p>
-        <form>
-            <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
-            <button type="button" onclick="join_game()">Join Game!</button>
-        </form>
+    <div class="multiplayer_option">
+        <button type="button" class="join_game" onclick="join_existing_game()">Join Existing Game</button>
+        <div class="enter_room_key">
+            <p>Please enter game key to join game!</p>
+            <form>
+                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
+                <button type="button" onclick="join_game()">Join Game!</button>
+            </form>
+        </div>
+        <button type="button" class="new_game" onclick="load_players()">Start New Game</button>
     </div>
-    <button type="button" class="new_game" onclick="load_players()">Start New Game</button>
-    <div class="chosen_character_preview">
-        <p>Choose a Character:</p>
-        <img class="character_preview" src="">
+    <div class="choose_a_char">
+        Choose a Character
     </div>
     <div class="character_display">
         <button type="button" class="start_game_btn" onclick="init_game()">Begin Game!</button>

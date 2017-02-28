@@ -15,6 +15,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height:100vh;
 }
 .game_header h1, .game_nav{
     margin: 0 auto;
@@ -208,17 +209,19 @@
     width: 61%;
 }
 .active_player{
-    font-size:30px;
-    color:red;
+    border: 2px solid red;
 }
 .current_player{
     display:inline;
     position: relative;
-    left: 1em;
-    bottom: 1em;
+    top: 1vh;
 }
 .player1_icon, .player2_icon{
     display: inherit;
+}
+.player1_icon img, .player2_icon img{
+    width: 5vw;
+    margin:0;
 }
 .enter_room_key{
     display:none;
@@ -263,9 +266,27 @@
     height: 63px;
     right: 14%;
     position: absolute;
-    top: 23%;
+    top: 60%;
     font-size: 20px;
     font-family: harryP;
     background-color: #b54646;
     color:white
+}
+.choose_a_char{
+    font-size: 40px;
+    display: inline;
+    color: white;
+    position: absolute;
+    transform: translate(100%,-100%);
+}
+.new_game, .join_game{
+    width: 164px;
+    height: 63px;
+    font-size: 20px;
+    font-family: harryP;
+    background-color: #b54646;
+    color:white
+}
+.multiplayer_option{
+    transform: translate(35%,200%)
 }
