@@ -10,7 +10,7 @@ var last_spell_casted = null;
 var fb_ref;
 var game_id = null;
 var player_score = {};
-var current_player;
+var current_player = 1;
 var active_player;
 var player1 = 1;
 var player2 = 2;
@@ -72,6 +72,22 @@ function init_game(){
 }
 function assign_current_player(){
     fb_ref.ref("games_in_session/" + game_id).update({current_player:1})
+    active_player = 1;
+}
+function toggle_current_player(){
+    fb_ref.ref("games_in_session/" + game_id + "/current_player").once("value", function(snapshot){
+        var current_player = snapshot.val();
+        console.log("current player is: ", current_player)
+        if(current_player == 1){
+            fb_ref.ref("games_in_session/" + game_id).update({current_player:2})
+            active_player = 2
+            check_active_player()
+        }else{
+            fb_ref.ref("games_in_session/" + game_id).update({current_player:1})
+            active_player = 1
+            check_active_player()
+        }
+    })
 }
 function choose_character(){
     $(".character_img").css("opacity", "1");
@@ -91,13 +107,10 @@ function switch_players(){
     if(active_player == 1){
         active_player = 2;
         check_active_player();
-        // $(".player1_icon img").removeClass("active_player");
-        // $(".player2_icon img").addClass("active_player")
+
     }else if(active_player == 2){
         active_player = 1;
         check_active_player();
-        // $(".player2_icon img").removeClass("active_player");
-        // $(".player1_icon img").addClass("active_player")
     }
 }
 function read_user_spell(active_player, second_card){
@@ -141,7 +154,7 @@ function card_clicked() {
                 second_card_clicked.find(".front > img").attr("src")){
                 read_user_spell(active_player, second_card);
                 display_last_card();
-                switch_players()
+                toggle_current_player();
                 match_counter++;
                 matches++;
                 accuracy = (((matches/attempts)*100).toFixed(2));
@@ -155,7 +168,7 @@ function card_clicked() {
                     return;
                 }
             } else {
-                switch_players()
+                toggle_current_player()
                 $(".card").unbind("click");
                 function time_out(){
                     var first_card = first_card_clicked.data("position");
@@ -190,12 +203,20 @@ function init_score_to_db(){
 }
 function update_player_score(player,score){
     if(player == 2){
-        player1_score -= score
-       display_score();
+        fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+            var new_player_score = snapshot.val().player1_score;
+            new_player_score -= score
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player1_score:new_player_score})
+        });
     }else if(player == 1){
-        player2_score -= score;
-        display_score();
+        fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+            var new_player_score = snapshot.val().player2_score;
+            new_player_score -= score
+
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player2_score:new_player_score})
+        });
     }
+    display_score()
 }
 function display_score(){
     fb_ref.ref("games_in_session/" + game_id + "/player_score").on("value", function(snapshot){
@@ -205,13 +226,21 @@ function display_score(){
     });
 }
 function add_player_score(player, score){
-    if(player == 1){
-        player1_score += score
-        $(".your_health_score").text(player1_score);
-    }else if (player == 2){
-        player2_score += score
-        $(".enemy_health_score").text(player2_score);
+    if(player == 2){
+        fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+            var new_player_score = snapshot.val().player1_score;
+            new_player_score += score
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player2_score:new_player_score})
+        });
+    }else if(player == 1){
+        fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+            var new_player_score = snapshot.val().player2_score;
+            new_player_score += score
+
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player1_score:new_player_score})
+        });
     }
+    display_score()
 }
 function reset_stats(){
     accuracy = 0;
@@ -283,29 +312,33 @@ function new_shuffle(){
         assign_current_player();
         display_score();
         check_active_player();
+        fb_ref.ref("/games_in_session/" + game_id + "/board").on("value", function(snapshot){
+            var card_deck = snapshot.val()
+            build_player2_dom(card_deck);
+        });
     })
 }
 function build_card_display(card_array){
     var database_array = [];
     for(var i = 0; i < card_array.length; i ++){
         var individual_card = {};
-        var img_src = card_array[i].url;
-        var img_title = card_array[i].title;
-        var card = $("<div>").addClass("card");
-        var front = $("<div>").addClass("front");
-        var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
-        var image = $("<img>").attr("src", img_src);
-        var checked_spell =  strip_spell(img_title);
-        var spell = $("<p>").text(checked_spell).addClass("spells");
-        front.append(image);
-        front.append(spell);
-        card.append(front);
-        card.append(back);
-        $("#game-area").append(card);
+        // var img_src = card_array[i].url;
+        // var img_title = card_array[i].title;
+        // var card = $("<div>").addClass("card");
+        // var front = $("<div>").addClass("front");
+        // var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
+        // var image = $("<img>").attr("src", img_src);
+        // var checked_spell =  strip_spell(img_title);
+        // var spell = $("<p>").text(checked_spell).addClass("spells");
+        // front.append(image);
+        // front.append(spell);
+        // card.append(front);
+        // card.append(back);
+        // $("#game-area").append(card);
         individual_card.url = card_array[i].url;
         individual_card.title = card_array[i].title;
         individual_card.status = false;
-        card.data("position", i);
+        // card.data("position", i);
         database_array.push(individual_card);
     }
     game_id = fb_ref.ref("games_in_session").push({
@@ -344,7 +377,6 @@ function build_player2_dom(card_array){
                 back.hide();
             }
         }
-
     }
     $(".card").click(card_clicked);
 }
