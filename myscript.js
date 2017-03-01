@@ -9,14 +9,13 @@ var games_played = 0;
 var last_spell_casted = null;
 var fb_ref;
 var game_id = null;
-var player1_score = 100;
-var player2_score = 100;
+var player_score = {};
+var current_player;
 var active_player;
 var player1 = 1;
 var player2 = 2;
+var check_player2 = null;
 var character_id;
-// var player1_icon = null;
-// var player2_icon = null;
 
 $(document).ready(function(){
     choose_player_settings();
@@ -24,9 +23,18 @@ $(document).ready(function(){
     $(".reset_button").on("click",reset_button);
     $("#winning_gif").on("click", reset_button);
     $("#losing_gif").on("click", reset_button);
+    var config = {
+        apiKey: "AIzaSyAv9PQDq8j_Clv7S9ND9WU31YCm0l2DfU4",
+        authDomain: "memory-match-96fcd.firebaseapp.com",
+        databaseURL: "https://memory-match-96fcd.firebaseio.com",
+        storageBucket: "memory-match-96fcd.appspot.com",
+        messagingSenderId: "431642364742"
+    };
+    firebase.initializeApp(config);
+    fb_ref = firebase.database();
 });
+
 function choose_player_settings(){
-    init_firebase();
     $(".current_player").hide();
     $(".id_container").hide();
     $(".stats_container").hide();
@@ -34,6 +42,7 @@ function choose_player_settings(){
     $(".game-body").hide();
     $(".start_game_btn").hide()
 }
+// Loads characters images from Firebase and attaches click handler
 function load_players(){
     $(".choose_a_char").show();
     $(".start_game_btn").show();
@@ -52,11 +61,6 @@ function load_players(){
         }
     })
 }
-function choose_character(){
-    $(".character_img").css("opacity", "1");
-    $(this).find(".character_img").css("opacity", "0.6");
-    character_id = $(this).find(".character_img").attr("src");
-}
 function init_game(){
     $(".character_display").hide();
     $(".choose_a_char").hide();
@@ -64,38 +68,36 @@ function init_game(){
     $(".game-body").show();
     $(".current_player").show();
     $(".id_container").show();
-    active_player = player1;
     new_shuffle();
-    update_player_score(player1, 0);
-    update_player_score(player2, 0);
 }
-function init_firebase(){
-    var config = {
-        apiKey: "AIzaSyAv9PQDq8j_Clv7S9ND9WU31YCm0l2DfU4",
-        authDomain: "memory-match-96fcd.firebaseapp.com",
-        databaseURL: "https://memory-match-96fcd.firebaseio.com",
-        storageBucket: "memory-match-96fcd.appspot.com",
-        messagingSenderId: "431642364742"
-    };
-    firebase.initializeApp(config);
-    fb_ref = firebase.database();
+function assign_current_player(){
+    fb_ref.ref("games_in_session/" + game_id).update({current_player:1})
+}
+function choose_character(){
+    $(".character_img").css("opacity", "1");
+    $(this).find(".character_img").css("opacity", "0.6");
+    character_id = $(this).find(".character_img").attr("src");
 }
 function check_active_player(){
     if(active_player == player1){
+        $(".player2_icon img").removeClass("active_player");
         $(".player1_icon img").addClass("active_player")
     }else{
+        $(".player1_icon img").removeClass("active_player");
         $(".player2_icon img").addClass("active_player")
     }
 }
 function switch_players(){
     if(active_player == 1){
         active_player = 2;
-        $(".player1_icon img").removeClass("active_player");
-        $(".player2_icon img").addClass("active_player")
+        check_active_player();
+        // $(".player1_icon img").removeClass("active_player");
+        // $(".player2_icon img").addClass("active_player")
     }else if(active_player == 2){
         active_player = 1;
-        $(".player2_icon img").removeClass("active_player");
-        $(".player1_icon img").addClass("active_player")
+        check_active_player();
+        // $(".player2_icon img").removeClass("active_player");
+        // $(".player1_icon img").addClass("active_player")
     }
 }
 function read_user_spell(active_player, second_card){
@@ -179,18 +181,29 @@ function display_stats(){
     $(".games_played .value").html(games_played);
     $(".attempts .value").html(attempts);
 }
+function init_score_to_db(){
+    player_score = {
+        player1_score: 100,
+        player2_score: 100
+    }
+    fb_ref.ref("games_in_session/" + game_id + "/player_score").update(player_score)
+}
 function update_player_score(player,score){
     if(player == 2){
         player1_score -= score
-        console.log("player1 score is: ", player1_score);
-        $(".your_health_score").text(player1_score);
+       display_score();
     }else if(player == 1){
         player2_score -= score;
-        console.log("Player 2 score is: ", player2_score);
-        $(".enemy_health_score").text(player2_score);
+        display_score();
     }
 }
-
+function display_score(){
+    fb_ref.ref("games_in_session/" + game_id + "/player_score").on("value", function(snapshot){
+        var score_obj = snapshot.val();
+        $(".your_health_score").text(score_obj.player1_score);
+        $(".enemy_health_score").text(score_obj.player2_score);
+    });
+}
 function add_player_score(player, score){
     if(player == 1){
         player1_score += score
@@ -232,11 +245,18 @@ function add_player1_to_fb(character_id){
         fb_ref.ref("games_in_session/" + game_id).update(player_obj)
     }
 }
-function build_player_character(){
-    fb_ref.ref("games_in_session/" + game_id + "/player1").once("value", function(snapshot){
+function add_player2_to_fb(character_id){
+    var player_obj = {};
+    player_obj.player2 = character_id;
+    if(game_id !== null){
+        fb_ref.ref("games_in_session/" + game_id).update(player_obj)
+    }
+}
+function build_player_character(player, player_icon){
+    fb_ref.ref("games_in_session/" + game_id + "/" + player).once("value", function(snapshot){
         var photo_img = snapshot.val();
         var character_img = $("<img>").attr("src", photo_img);
-        $(".player1_icon").append(character_img)
+        $(player_icon).append(character_img)
     })
 }
 function new_shuffle(){
@@ -259,7 +279,9 @@ function new_shuffle(){
         }
         build_card_display(makeArray)
         add_player1_to_fb(character_id);
-        build_player_character();
+        build_player_character("player1", ".player1_icon");
+        assign_current_player();
+        display_score();
         check_active_player();
     })
 }
@@ -273,7 +295,8 @@ function build_card_display(card_array){
         var front = $("<div>").addClass("front");
         var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
         var image = $("<img>").attr("src", img_src);
-        var spell = $("<p>").text(img_title).addClass("spells");
+        var checked_spell =  strip_spell(img_title);
+        var spell = $("<p>").text(checked_spell).addClass("spells");
         front.append(image);
         front.append(spell);
         card.append(front);
@@ -288,6 +311,7 @@ function build_card_display(card_array){
     game_id = fb_ref.ref("games_in_session").push({
         board:database_array
     }).key;
+    init_score_to_db();
     $(".game_id").text(game_id);
     $(".card").click(card_clicked);
 }
@@ -308,7 +332,8 @@ function build_player2_dom(card_array){
             var front = $("<div>").addClass("front");
             var back = $("<div>").addClass("back").append($("<img>").attr("src", "https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg"))
             var image = $("<img>").attr("src", img_src);
-            var spell = $("<p>").text(img_title).addClass("spells");
+            var checked_spell =  strip_spell(img_title);
+            var spell = $("<p>").text(checked_spell).addClass("spells")
             front.append(image);
             front.append(spell);
             card.append(front);
@@ -323,7 +348,6 @@ function build_player2_dom(card_array){
     }
     $(".card").click(card_clicked);
 }
-
 function display_last_card() {
     var last_spell_casted = second_card_clicked.find(".front > p").text();
     if(active_player == 1){
@@ -372,16 +396,38 @@ function join_existing_game(){
     $(".new_game").hide();
 }
 function join_game(){
-    init_firebase();
-    game_id = $(".input_game_id").val();
-    fb_ref.ref("/games_in_session/" + game_id).on("value", function(snapshot){
-        var card_deck = snapshot.val().board;
+    $(".character_display").hide();
+    $(".choose_a_char").hide();
+    $(".stats_container").show();
+    $(".game-body").show();
+    $(".current_player").show();
+    $(".id_container").show();
+    fb_ref.ref("/games_in_session/" + game_id + "/board").on("value", function(snapshot){
+        var card_deck = snapshot.val()
         build_player2_dom(card_deck);
     });
+    add_player2_to_fb(character_id);
+    build_player_character("player2", ".player2_icon");
+    build_player_character("player1", ".player1_icon");
+    check_active_player();
+    display_score();
     $(".game-body").show();
     check_active_player();
-    update_player_score(player1, 0);
-    update_player_score(player2, 0);
+    // update_player_score(player1, 0);
+    // update_player_score(player2, 0);
+}
+function build_characters_for_player2(){
+    check_player2 = true;
+    game_id = $(".input_game_id").val();
+    load_players();
+}
+//checks to see if this is player1 or player2 joining the game ad which function to call
+function checks_player2(){
+    if (check_player2 == null){
+        init_game()
+    }else{
+        join_game()
+    }
 }
 function copyToClipboard(element) {
     var $temp = $("<input>");
