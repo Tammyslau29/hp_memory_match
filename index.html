@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Wizard's Guessing Game</title>
+
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="myscript.js"></script>
+    <script src="myscript.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
 
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -13,7 +14,6 @@
 </head>
 <body class="guessing_game_body">
     <header class="game_header">
-        <!--<img src="http://img11.deviantart.net/759b/i/2012/231/0/6/elder_wand_by_magnetic_flux-d5bmwso.png">-->
         <img class="hp_logo" src="http://vignette3.wikia.nocookie.net/logopedia/images/9/9c/HarryPotter.png/revision/latest?cb=20160624203951">
         <h1>and the Great Duel</h1>
         <div class="stats_container">
@@ -32,24 +32,31 @@
         </div>
         <div class="opponent_char"></div>
         <div class="current_player">
-            <div class="player1_icon"></div>
-            <div class="player2_icon"></div>
+            <div class="player1_icon">
+                <p class="player1_text">Wizard One</p>
+            </div>
+            <div class="player2_icon">
+                <p class="player2_text">Wizard Two</p>
+            </div>
         </div>
         <div class="id_container">
-            <p class="your_game_id">Send This ID to your Player 2!</p>
             <p class="game_id"></p>
-            <button onclick="copyToClipboard('.game_id')">Press for Game ID</button>
+            <button class="copy_clipboard" onclick="copyToClipboard('.game_id')">Press for Game ID</button>
             <p class="copy_status">Link was copied to your clipboard</p>
         </div>
         <nav class="game_nav">
             <ul>
-                <a href="#"><li>settings</li></a>
+                <a href="#"><li><button onclick="open_shareable()" class="dropbtn">Get Player 2 Code</button></li></a>
+                <a href="#"><li><button onclick="open_settings()" class="dropbtn">settings</button></li></a>
                 <a href="about.html"><li>about</li></a>
             </ul>
         </nav>
+        <div id="myDropdown" class="music_controls dropdown-content">
+            <button  class="pause" onclick="pauseMusic()" type="button">Pause Music</button>
+            <button class="play" onclick="playMusic()" type="button">Resume Music </button></div>
     </header>
     <div class="multiplayer_option">
-        <button type="button" class="join_game" onclick="join_existing_game()">Join Existing Game</button>
+        <button type="button" class="join_game" onclick="join_existing_game()">Join Existing Duel</button>
         <div class="enter_room_key">
             <p>Please enter game key to join game!</p>
             <form>
@@ -57,18 +64,18 @@
                 <button type="button" onclick="build_characters_for_player2()">Choose my character</button>
             </form>
         </div>
-        <button type="button" class="new_game" onclick="load_players()">Start New Game</button>
+        <button type="button" class="new_game" onclick="load_players()">Start New Duel</button>
     </div>
     <div class="choose_a_char">
         Choose a Character
     </div>
     <div class="character_display">
-        <button type="button" class="start_game_btn" onclick="checks_player2()">Begin Game!</button>
+        <button type="button" class="start_game_btn" onclick="checks_player2()">Challenge Duel!</button>
     </div>
     <div class="game-body">
         <div class="char_health">
             <div class="your_health">
-                <h2>Your Health</h2>
+                <h2>Wizard One's Health</h2>
                 <p class="your_health_score"></p>
                 <div class="your_last_spell">
                     <p>Last Spell Casted</p>
@@ -76,7 +83,7 @@
                 </div>
             </div>
             <div class="opponent_health">
-                <h2>Opponent's Health</h2>
+                <h2>Wizard Two's Health</h2>
                 <p class="enemy_health_score"></p>
                 <div class="opponents_last_spell">
                     <p>Last Spell Casted</p>
@@ -105,7 +112,7 @@
         <div id="game-area">
         </div>
     </div>
-    <audio autoplay loop>
+    <audio id="music" autoplay loop>
         <source src="./photo/5ebb3487fc8ec53df94d23e796c02755.mp3" type="audio/ogg">
         Your browser does not support the audio element.
     </audio>

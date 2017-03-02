@@ -15,7 +15,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height:100vh;
+    height:100%;
 }
 .game_header h1, .game_nav{
     margin: 0 auto;
@@ -35,8 +35,8 @@
 .game_header h1 {
     font-size: 20px;
     position: absolute;
-    top: 4.0em;
-    left: 2em;
+    top: 4.5em;
+    left: 4em;
 }
 .game_header .game_nav, .stats_container {
     font-family: lumos;
@@ -75,7 +75,7 @@
     display: inline-block;
     color: darkred;
     font-family: parsel;
-    font-size: 30px;
+    font-size: 25px;
 }
 .char_health {
     width:30%;
@@ -89,6 +89,7 @@
     background-size: cover;
 }
 #game-area{
+    margin-top:10px;
     width: 70%;
     float:right;
 }
@@ -209,7 +210,12 @@
     width: 61%;
 }
 .active_player{
-    border: 2px solid red;
+    border: 2px solid goldenrod;
+}
+.active_text{
+    color: #fdc10c;
+    font-weight: bold;
+    font-size: 18px;
 }
 .current_player{
     display:inline;
@@ -221,7 +227,15 @@
 }
 .player1_icon img, .player2_icon img{
     width: 5vw;
+    height: 13vh;
     margin:0;
+}
+.player1_text, .player2_text{
+    position: relative;
+    top: 15px;
+    left: 6%;
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
 }
 .enter_room_key{
     display:none;
@@ -234,20 +248,31 @@
 }
 .copy_status{
     display: none;
-    color: red;
+    color: #9E9E9E;
+    text-align: center;
+    font-size: 12px;
 }
 .your_game_id{
+    font-family: 'Cormorant Garamond', serif;
     position: relative;
     bottom: 2em;
     left: 9em;
+}
+.copy_clipboard{
+    background: #5f0e0e;
+    border: 1px solid black;
+    border-radius: 13px;
+    font-size: medium;
+    font-family: 'Cormorant Garamond', serif;
+    color: white;
 }
 .character_cont{
     background-color: red;
     display: inline-block;
     transform: translate(50%,0%);
-    width: 200px;
+    width: 150px;
     margin: 10px;
-    height: 250px;
+    height: 200px;
 }
 .character_img{
    height:100%;
@@ -259,7 +284,7 @@
     color: white;
 }
 .character_display{
-    width: 72%;
+    width: 65%;
 }
 .start_game_btn{
     width: 164px;
@@ -273,11 +298,12 @@
     color:white
 }
 .choose_a_char{
+    font-family: lumos;
     font-size: 40px;
     display: inline;
     color: white;
     position: absolute;
-    transform: translate(100%,-100%);
+    transform: translate(225%,150%);
 }
 .new_game, .join_game{
     width: 164px;
@@ -289,4 +315,33 @@
 }
 .multiplayer_option{
     transform: translate(35%,200%)
+}
+.dropdown-content, .id_container {
+    cursor: pointer;
+    width: 200px;
+    display: none;
+    position: absolute;
+    background-color: rgba(39, 29, 29, 0.89);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 10%;
+}
+.pause, .play, .copy_clipboard{
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: white;
+    width: 100%;
+    font-size: 17px;
+    font-family: lumos;
+}
+.dropbtn{
+    border: none;
+    background: none;
+    color: white;
+    font-family: lumos;
+    font-size: 17px;
 }
