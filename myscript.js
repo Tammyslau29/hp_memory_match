@@ -10,7 +10,7 @@ var last_spell_casted = null;
 var fb_ref;
 var game_id = null;
 var player_score = {};
-var current_player = 1;
+// var current_player = 1;
 var active_player;
 var player1 = 1;
 var player2 = 2;
@@ -32,6 +32,10 @@ $(document).ready(function(){
     };
     firebase.initializeApp(config);
     fb_ref = firebase.database();
+    $(".game-body").on("click", function(){
+        $(".id_container").hide();
+        $(".music_controls").hide()
+    })
 });
 
 function choose_player_settings(){
@@ -433,6 +437,7 @@ function handle_spell_damage(player, spell){
 }
 function join_existing_game(){
     $(".enter_room_key").show();
+    $(".join_game").hide();
     $(".new_game").hide();
 }
 function join_game(){

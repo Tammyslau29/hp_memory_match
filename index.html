@@ -58,10 +58,10 @@
     <div class="multiplayer_option">
         <button type="button" class="join_game" onclick="join_existing_game()">Join Existing Duel</button>
         <div class="enter_room_key">
-            <p>Please enter game key to join game!</p>
+            <p>Please enter game key provided by Player 1 to join game!</p>
             <form>
-                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
-                <button type="button" onclick="build_characters_for_player2()">Choose my character</button>
+                <input type="text" class="input_game_id" placeholder="Enter Game Key">
+                <button class="game_key_btn" type="button" onclick="build_characters_for_player2()">Choose my character</button>
             </form>
         </div>
         <button type="button" class="new_game" onclick="load_players()">Start New Duel</button>

@@ -307,6 +307,7 @@
 }
 .new_game, .join_game{
     width: 164px;
+    margin: 5px;
     height: 63px;
     font-size: 20px;
     font-family: harryP;
@@ -314,7 +315,8 @@
     color:white
 }
 .multiplayer_option{
-    transform: translate(35%,200%)
+    margin: 0px auto;
+    text-align: center;
 }
 .dropdown-content, .id_container {
     cursor: pointer;
@@ -326,7 +328,7 @@
     z-index: 1;
     position: absolute;
     right: 0;
-    top: 10%;
+    top: 20%;
 }
 .pause, .play, .copy_clipboard{
     padding: 10px;
@@ -337,6 +339,28 @@
     width: 100%;
     font-size: 17px;
     font-family: lumos;
+}
+div.enter_room_key p{
+    text-align: center;
+    font-size: 20px;
+    color: goldenrod;
+}
+div.enter_room_key form{
+    text-align: center;
+}
+input.input_game_id{
+    display: inline-block;
+    border-radius: 5px;
+    padding: 18px;
+    font-size:15px;
+}
+.game_key_btn{
+    font-size: 13px;
+    padding: 18px 3px;
+    background-color: darkred;
+    color: white;
+    font-family: lumos;
+    border-radius: 10px;
 }
 .dropbtn{
     border: none;
