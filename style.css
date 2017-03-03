@@ -12,10 +12,8 @@
 }
 .guessing_game_body {
     background-image: url("http://corporate.comcast.com/images/harry-potter-hogwarts-hollywood-universal-2.jpg");
-    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height:100%;
 }
 .game_header h1, .game_nav{
     margin: 0 auto;
@@ -25,18 +23,17 @@
     color:#d3ac18;
 }
 .game_header > img.hp_logo{
-    width: 18%;
+    width: 16%;
 }
 .game_header img{
-    width: 10%;
     display: inline-block;
     margin: 10px;
 }
 .game_header h1 {
-    font-size: 20px;
+    font-size: 16px;
     position: absolute;
-    top: 4.5em;
-    left: 4em;
+    top: 5.6em;
+    left: 9em;
 }
 .game_header .game_nav, .stats_container {
     font-family: lumos;
@@ -47,6 +44,7 @@
     display: inline-block;
     margin: 3px 0px 0px 20px;
     color: white;
+    margin-left: 31px;
 }
 .value, .label {
     display: inline-block;
@@ -78,7 +76,9 @@
     font-size: 25px;
 }
 .char_health {
+    font-size: 0.9em;
     width:30%;
+    height:86vh;
     display: inline-block;
     text-align: center;
     color: black;
@@ -89,16 +89,15 @@
     background-size: cover;
 }
 #game-area{
-    margin-top:10px;
     width: 70%;
     float:right;
 }
 .game-body {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 .card {
-    width: 14%;
-    height: 187px;
+    width: 13%;
+    height: 175px;
     display: inline-block;
     margin: 0px 8px 27px;
     position:relative;
@@ -125,10 +124,8 @@
 .card .front img {
     width: 100%;
     height: 100%;
-    opacity: .7;
 }
 .card .back img{
-    opacity:0.3;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -202,12 +199,15 @@
     top: 38%;
 }
 .reset_button {
+    position: absolute;
     border: none;
+    right: 70vw;
+    bottom: -5vh;
     background-color: transparent;
     outline: none;
 }
 .reset_button img{
-    width: 61%;
+    width: 47%;
 }
 .active_player{
     border: 2px solid goldenrod;
@@ -220,20 +220,19 @@
 .current_player{
     display:inline;
     position: relative;
-    top: 1vh;
 }
 .player1_icon, .player2_icon{
     display: inherit;
 }
 .player1_icon img, .player2_icon img{
-    width: 5vw;
+    width: 4vw;
     height: 13vh;
     margin:0;
 }
 .player1_text, .player2_text{
     position: relative;
     top: 15px;
-    left: 6%;
+    left: 5%;
     display: inline-block;
     font-family: 'Cormorant Garamond', serif;
 }
@@ -284,14 +283,15 @@
     color: white;
 }
 .character_display{
-    width: 65%;
+    width: 800px;
+    margin: 0;
 }
 .start_game_btn{
     width: 164px;
     height: 63px;
-    right: 14%;
+    right: 17%;
     position: absolute;
-    top: 60%;
+    top: 50%;
     font-size: 20px;
     font-family: harryP;
     background-color: #b54646;
@@ -299,11 +299,12 @@
 }
 .choose_a_char{
     font-family: lumos;
-    font-size: 40px;
+    font-size: 2.5em;
     display: inline;
     color: white;
     position: absolute;
-    transform: translate(225%,150%);
+    right: 10%;
+    top: 30%;
 }
 .new_game, .join_game{
     width: 164px;
