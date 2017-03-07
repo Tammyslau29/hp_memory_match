@@ -508,6 +508,7 @@ function join_existing_game(){
     $(".enter_room_key").show();
     $(".join_game").hide();
     $(".new_game").hide();
+    $("#player_2_code").hide();
 }
 /**
  * accesses database at key to join exisiting game and will build dom base upon key
