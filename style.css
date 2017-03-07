@@ -335,7 +335,7 @@
     z-index: 1;
     position: absolute;
     right: 0;
-    top: 20%;
+    top: 11%;
 }
 .pause, .play, .copy_clipboard{
     padding: 10px;
