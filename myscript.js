@@ -10,7 +10,6 @@ var last_spell_casted = null;
 var fb_ref;
 var game_id = null;
 var player_score = {};
-// var current_player = 1;
 var active_player;
 var player1 = 1;
 var player2 = 2;
@@ -37,7 +36,9 @@ $(document).ready(function(){
         $(".music_controls").hide()
     })
 });
-
+/**
+ * Hides everything except player character container
+ */
 function choose_player_settings(){
     $(".current_player").hide();
     $(".id_container").hide();
@@ -46,7 +47,9 @@ function choose_player_settings(){
     $(".game-body").hide();
     $(".start_game_btn").hide()
 }
-// Loads characters images from Firebase and attaches click handler
+/**
+ * Loads characters images from Firebase and attaches click handler
+ */
 function load_players(){
     $(".choose_a_char").show();
     $(".start_game_btn").show();
@@ -65,6 +68,9 @@ function load_players(){
         }
     })
 }
+/**
+ * hides character display and stats container and reshuffles the board
+ */
 function init_game(){
     $(".character_display").hide();
     $(".choose_a_char").hide();
@@ -74,14 +80,27 @@ function init_game(){
     // $(".id_container").show();
     new_shuffle();
 }
+/**
+ * when game is initialized, current player is set to 1
+ */
 function assign_current_player(){
     fb_ref.ref("games_in_session/" + game_id).update({current_player:1})
     active_player = 1;
 }
+/**
+ * initializes each player score to 100 in firebase
+ */
+function init_score_to_db(){
+    player_score = {
+        player1_score: 100,
+        player2_score: 100
+    }
+    fb_ref.ref("games_in_session/" + game_id + "/player_score").update(player_score)
+}
+
 function toggle_current_player(){
     fb_ref.ref("games_in_session/" + game_id + "/current_player").once("value", function(snapshot){
         var current_player = snapshot.val();
-        console.log("current player is: ", current_player)
         if(current_player == 1){
             fb_ref.ref("games_in_session/" + game_id).update({current_player:2})
             active_player = 2
@@ -91,11 +110,16 @@ function toggle_current_player(){
         }
     })
 }
+
 function choose_character(){
     $(".character_img").css("opacity", "1");
     $(this).find(".character_img").css("opacity", "0.6");
     character_id = $(this).find(".character_img").attr("src");
 }
+
+/**
+ * assigns active player class to current player
+ */
 function check_active_player(current_player){
     if(current_player == 1){
         $(".player2_icon img").removeClass("active_player");
@@ -109,6 +133,9 @@ function check_active_player(current_player){
         $(".player2_text").addClass("active_text")
     }
 }
+/**
+ * grabs spell name from firebase and calls handle spell function with the name
+ */
 function read_user_spell(active_player, second_card){
     var spell;
     var unchecked_spell
@@ -118,6 +145,9 @@ function read_user_spell(active_player, second_card){
         handle_spell_damage(active_player, spell);
     });
 }
+/**
+ * removes extra character from spell so text is uniform
+ */
 function strip_spell(title){
     var new_title = title;
     for(var i=0; i < title.length; i++){
@@ -127,6 +157,9 @@ function strip_spell(title){
     }
     return new_title
 }
+/**
+ * card click handler with card win logic
+ */
 function card_clicked() {
     var first_card_status = {};
     var second_card_status = {};
@@ -142,62 +175,69 @@ function card_clicked() {
             second_card_clicked = $(this);
             var second_card = second_card_clicked.data("position");
             second_card_status[second_card + "/status"] = true;
-            fb_ref.ref("games_in_session/" + game_id + "/board").update(second_card_status);
             attempts++;
             accuracy = (((matches/attempts)*100).toFixed(2));
             display_stats();
+            fb_ref.ref("games_in_session/" + game_id + "/board").update(second_card_status);
             if (first_card_clicked.find(".front > img").attr("src") ===
                 second_card_clicked.find(".front > img").attr("src")){
+                handle_card_match();
                 read_user_spell(active_player, second_card);
                 display_last_card();
                 toggle_current_player();
-                match_counter++;
-                matches++;
-                accuracy = (((matches/attempts)*100).toFixed(2));
-                display_stats();
-                first_card_clicked = null;
-                second_card_clicked = null;
-                if (total_possible_matches == match_counter) {
-                    $("#winning_gif").show();
-                    $(".card").hide();
-                } else {
-                    return;
-                }
-            } else {
+            }
+            else {
                 toggle_current_player()
                 $(".card").unbind("click");
-                function time_out(){
-                    var first_card = first_card_clicked.data("position");
-                    var second_card = second_card_clicked.data("position");
-                    first_card_status[first_card + "/status"] = false;
-                    fb_ref.ref("games_in_session/" + game_id + "/board").update(first_card_status);
-                    second_card_status[second_card + "/status"] = false;
-                    fb_ref.ref("games_in_session/" + game_id + "/board").update(second_card_status);
-                    first_card_clicked.find(".back").show();
-                    second_card_clicked.find(".back").show();
-                    $(".card").click(card_clicked);
-                    first_card_clicked = null;
-                    second_card_clicked = null;
-                }
-                setTimeout(time_out, 2000);
+                setTimeout(card_time_out, 2000);
                 display_stats()
             }
         }
     }
 };
+/**
+ * resets card status in firebase to false and resets first_card and second_card clicked variables
+ */
+function card_time_out(){
+    var first_card = first_card_clicked.data("position");
+    var second_card = second_card_clicked.data("position");
+    first_card_status[first_card + "/status"] = false;
+    fb_ref.ref("games_in_session/" + game_id + "/board").update(first_card_status);
+    second_card_status[second_card + "/status"] = false;
+    fb_ref.ref("games_in_session/" + game_id + "/board").update(second_card_status);
+    first_card_clicked.find(".back").show();
+    second_card_clicked.find(".back").show();
+    $(".card").click(card_clicked);
+    first_card_clicked = null;
+    second_card_clicked = null;
+}
+/**
+ * checks to see if total matches condition is met
+ */
+function handle_card_match(){
+    match_counter++;
+    matches++;
+    accuracy = (((matches/attempts)*100).toFixed(2));
+    display_stats();
+    first_card_clicked = null;
+    second_card_clicked = null;
+    if (total_possible_matches == match_counter) {
+        $("#winning_gif").show();
+        $(".card").hide();
+    } else {
+        return;
+    }
+}
+
 function display_stats(){
     $(".accuracy .value").html((accuracy) + "%");
     $(".games_played .value").html(games_played);
     $(".attempts .value").html(attempts);
 }
-function init_score_to_db(){
-    player_score = {
-        player1_score: 100,
-        player2_score: 100
-    }
-    fb_ref.ref("games_in_session/" + game_id + "/player_score").update(player_score)
-}
-function update_player_score(player,score){
+/**
+ * subtracts player score that's opposite the current players
+ */
+function subtract_player_score(player,score){
     if(player == 2){
         fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
             var new_player_score = snapshot.val().player1_score;
@@ -214,13 +254,9 @@ function update_player_score(player,score){
     }
     display_score()
 }
-function display_score(){
-    fb_ref.ref("games_in_session/" + game_id + "/player_score").on("value", function(snapshot){
-        var score_obj = snapshot.val();
-        $(".your_health_score").text(score_obj.player1_score);
-        $(".enemy_health_score").text(score_obj.player2_score);
-    });
-}
+/**
+ * adds to player score for current player
+ */
 function add_player_score(player, score){
     if(player == 2){
         fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
@@ -238,6 +274,17 @@ function add_player_score(player, score){
     }
     display_score()
 }
+
+function display_score(){
+    fb_ref.ref("games_in_session/" + game_id + "/player_score").on("value", function(snapshot){
+        var score_obj = snapshot.val();
+        $(".your_health_score").text(score_obj.player1_score);
+        $(".enemy_health_score").text(score_obj.player2_score);
+    });
+}
+/**
+ * sets stats to initial state
+ */
 function reset_stats(){
     accuracy = 0;
     matches = 0;
@@ -248,6 +295,9 @@ function reset_stats(){
     player1_score = 100;
     player2_score = 100;
 }
+/**
+ * resets stats, reshuffles the board, and initializes players score
+ */
 function reset_button() {
     games_played++;
     ($(".games_played .value").html(games_played));
@@ -263,6 +313,7 @@ function reset_button() {
     init_score_to_db();
     display_score()
 }
+
 function add_player1_to_fb(character_id){
     var player_obj = {};
     player_obj.player1 = character_id;
@@ -270,6 +321,7 @@ function add_player1_to_fb(character_id){
         fb_ref.ref("games_in_session/" + game_id).update(player_obj)
     }
 }
+
 function add_player2_to_fb(character_id){
     var player_obj = {};
     player_obj.player2 = character_id;
@@ -277,6 +329,9 @@ function add_player2_to_fb(character_id){
         fb_ref.ref("games_in_session/" + game_id).update(player_obj)
     }
 }
+/**
+ * creates player icon
+ */
 function build_player_character(player, player_icon){
     fb_ref.ref("games_in_session/" + game_id + "/" + player).once("value", function(snapshot){
         var photo_img = snapshot.val();
@@ -284,6 +339,9 @@ function build_player_character(player, player_icon){
         $(player_icon).append(character_img)
     })
 }
+/**
+ * shuffle function that checks if game has been initialized or reset button was pressed
+ */
 function new_shuffle(reset){
     var makeArray = [];
     var swap_card;
@@ -302,7 +360,7 @@ function new_shuffle(reset){
             makeArray[i] = makeArray[swap_card];
             makeArray[swap_card] = sub_card;
         }
-        build_card_display(makeArray, reset)
+        push_card_to_db(makeArray, reset)
         add_player1_to_fb(character_id);
         assign_current_player();
         display_score();
@@ -314,13 +372,16 @@ function new_shuffle(reset){
             });
             fb_ref.ref("/games_in_session/" + game_id + "/board").on("value", function(snapshot){
                 var card_deck = snapshot.val();
-                build_player2_dom(card_deck);
+                build_card_dom_display(card_deck);
             });
         }
 
     })
 }
-function build_card_display(card_array, reset){
+/**
+ * adds newly shuffled deck to firebase
+ */
+function push_card_to_db(card_array, reset){
     var database_array = [];
     for(var i = 0; i < card_array.length; i ++){
         var individual_card = {};
@@ -340,8 +401,8 @@ function build_card_display(card_array, reset){
     }
     init_score_to_db();
     $(".game_id").text(game_id);
-    //$(".card").click(card_clicked);
 }
+
 function check_for_reset(card_array) {
     var cards = $('.card');
     for(var i = 0; i < card_array.length; i ++) {
@@ -352,7 +413,10 @@ function check_for_reset(card_array) {
         }
     }
 }
-function build_player2_dom(card_array){
+/**
+ * builds card dom elements
+ */
+function build_card_dom_display(card_array){
     check_for_reset(card_array);
     var cards = $('.card');
 
@@ -385,6 +449,7 @@ function build_player2_dom(card_array){
     }
     $(".card").click(card_clicked);
 }
+
 function display_last_card(){
     var last_spell_casted = second_card_clicked.find(".front > p").text();
     if(active_player == 1){
@@ -400,30 +465,33 @@ function display_last_card(){
 
     }
 }
+
 function auto_kill(){
-    console.log("function called");
     $("#losing_gif").show();
     $(".card").hide();
 }
+/**
+ * calls appropriate handler depending on spell param
+ */
 function handle_spell_damage(player, spell){
     switch(spell){
         case "Avada Kedavra":
             auto_kill();
             break;
         case "Crucio":
-            update_player_score(player, 7);
+            subtract_player_score(player, 7);
             break;
         case "Expulso":
-            update_player_score(player, 5);
+            subtract_player_score(player, 5);
             break;
         case "Incendio":
-            update_player_score(player, 4);
+            subtract_player_score(player, 4);
             break;
         case "Stupefy":
-            update_player_score(player, 2);
+            subtract_player_score(player, 2);
             break;
         case "Expelliarmus":
-            update_player_score(player, 2);
+            subtract_player_score(player, 2);
             break;
         case "Liberacorpus":
             add_player_score(player, 1);
@@ -435,11 +503,15 @@ function handle_spell_damage(player, spell){
             add_player_score(player, 2)
     }
 }
+
 function join_existing_game(){
     $(".enter_room_key").show();
     $(".join_game").hide();
     $(".new_game").hide();
 }
+/**
+ * accesses database at key to join exisiting game and will build dom base upon key
+ */
 function join_game(){
     $(".id_container").hide();
     $(".character_display").hide();
@@ -449,7 +521,7 @@ function join_game(){
     $(".current_player").show();
     fb_ref.ref("/games_in_session/" + game_id + "/board").on("value", function(snapshot){
         var card_deck = snapshot.val()
-        build_player2_dom(card_deck);
+        build_card_dom_display(card_deck);
     });
     fb_ref.ref("/games_in_session/" + game_id + "/current_player").on("value", function(snapshot){
         var current_player = snapshot.val();
@@ -461,12 +533,15 @@ function join_game(){
     display_score();
     $(".game-body").show();
 }
+
 function build_characters_for_player2(){
     check_player2 = true;
     game_id = $(".input_game_id").val();
     load_players();
 }
-//checks to see if this is player1 or player2 joining the game ad which function to call
+/**
+ * checks to see if this is player1 or player2 joining the game ad which function to call
+ */
 function checks_player2(){
     if (check_player2 == null){
         init_game()
@@ -474,6 +549,7 @@ function checks_player2(){
         join_game()
     }
 }
+
 function copyToClipboard(element) {
     var $temp = $("<input>");
     $("body").append($temp);
@@ -482,17 +558,21 @@ function copyToClipboard(element) {
     $temp.remove();
     $(".copy_status").show();
 }
+
 function pauseMusic(){
     var x = document.getElementById("music");
         x.pause();
 }
+
 function playMusic(){
     var x = document.getElementById("music");
         x.play();
 }
+
 function open_settings(){
     $("#myDropdown").toggle();
 }
+
 function open_shareable(){
     $(".id_container").toggle();
 }
