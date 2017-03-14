@@ -181,9 +181,9 @@ function card_clicked() {
             fb_ref.ref("games_in_session/" + game_id + "/board").update(second_card_status);
             if (first_card_clicked.find(".front > img").attr("src") ===
                 second_card_clicked.find(".front > img").attr("src")){
+                display_last_card(second_card_clicked);
                 handle_card_match();
                 read_user_spell(active_player, second_card);
-                display_last_card();
                 toggle_current_player();
             }
             else {
@@ -199,6 +199,8 @@ function card_clicked() {
  * resets card status in firebase to false and resets first_card and second_card clicked variables
  */
 function card_time_out(){
+    var first_card_status = {};
+    var second_card_status = {};
     var first_card = first_card_clicked.data("position");
     var second_card = second_card_clicked.data("position");
     first_card_status[first_card + "/status"] = false;
@@ -450,7 +452,7 @@ function build_card_dom_display(card_array){
     $(".card").click(card_clicked);
 }
 
-function display_last_card(){
+function display_last_card(second_card_clicked){
     var last_spell_casted = second_card_clicked.find(".front > p").text();
     if(active_player == 1){
         fb_ref.ref("games_in_session/" + game_id + "/last_spell/").update({player1: last_spell_casted})
