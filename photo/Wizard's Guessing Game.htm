@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://localhost:8888/lfz/memory_match/gameboard.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Wizard's Guessing Game</title>
+    <script src="./Wizard&#39;s Guessing Game_files/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="./Wizard&#39;s Guessing Game_files/myscript.js"></script>
+    <script src="./Wizard&#39;s Guessing Game_files/firebase.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./Wizard&#39;s Guessing Game_files/style.css">
+    <link href="./Wizard&#39;s Guessing Game_files/css" rel="stylesheet">
+    <link href="./Wizard&#39;s Guessing Game_files/css(1)" rel="stylesheet">
+<style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body class="guessing_game_body">
+    <header class="game_header">
+        <!--<img src="http://img11.deviantart.net/759b/i/2012/231/0/6/elder_wand_by_magnetic_flux-d5bmwso.png">-->
+        <img class="hp_logo" src="./Wizard&#39;s Guessing Game_files/latest">
+        <h1>and the Great Duel</h1>
+        <button type="button" onclick="join_existing_game()">Join Existing Game</button>
+        <div class="enter_room_key">
+            <p>Please enter game key to join game!</p>
+            <form>
+                <input type="text" class="input_game_id" placeholder="Please Enter Game Key">
+                <button type="button" onclick="join_game()">Join Game!</button>
+            </form>
+        </div>
+        <button type="button" class="new_game" onclick="init_game()">Start New Game</button>
+        <div class="stats_container">
+            <div class="games_played">
+                <div class="label">Games Played:</div>
+                <div class="value">0</div>
+            </div>
+            <div class="attempts">
+                <div class="label">Attempts:</div>
+                <div class="value">1</div>
+            </div>
+            <div class="accuracy">
+                <div class="label">Accuracy:</div>
+                <div class="value">0.00%</div>
+            </div>
+        </div>
+        <div class="opponent_char"></div>
+        <div class="current_player">
+            <div class="player1_icon">Player 1</div>
+            <div class="player2_icon active_player">Player 2</div>
+        </div>
+        <div class="id_container">
+            <p class="your_game_id">Send This ID to your Player 2!</p>
+            <p class="game_id">-KdnkuNuDjP8msxDDx-3</p>
+            <button onclick="copyToClipboard(&#39;.game_id&#39;)">Press for Game ID</button>
+            <p class="copy_status" style="display: block;">Link was copied to your clipboard</p>
+        </div>
+        <nav class="game_nav">
+            <ul>
+                <a href="http://localhost:8888/lfz/memory_match/gameboard.html#"><li>settings</li></a>
+                <a href="http://localhost:8888/lfz/memory_match/about.html"><li>about</li></a>
+            </ul>
+        </nav>
+    </header>
+    <div class="game-body" style="display: block;">
+        <div class="char_health">
+            <div class="your_health">
+                <h2>Your Health</h2>
+                <p class="your_health_score">100</p>
+                <div class="your_last_spell">
+                    <p>Last Spell Casted</p>
+                    <div class="my_last_spell"></div>
+                </div>
+            </div>
+            <div class="opponent_health">
+                <h2>Opponent's Health</h2>
+                <p class="enemy_health_score">100</p>
+                <div class="opponents_last_spell">
+                    <p>Last Spell Casted</p>
+                    <div class="opponent_last_spell"></div>
+                </div>
+            </div>
+            <ul class="new_spell_list">
+                <li>Spells and their results:
+                    <ul>
+                        <li>Avada Kedavra - Automatic kill and ends the game.</li>
+                        <li>Crucio - minus 7 points from opponent</li>
+                        <li>Expulso -  minus 5 points from opponent</li>
+                        <li>Incendio - minus 4 points from opponent</li>
+                        <li>Liberacorpus - adds 1 point to your health</li>
+                        <li>Stupefy - minus 2 points from opponent</li>
+                        <li>Rennervate - adds 3 points to your health</li>
+                        <li>Expelliarmus - minus 2 points from opponent</li>
+                        <li>Finite Incantatum - adds 2 points to your health</li>
+                    </ul>
+                </li>
+            </ul>
+            <button class="reset_button" type="button"><img src="./Wizard&#39;s Guessing Game_files/RESET.png"></button>
+            <img id="winning_gif" src="./Wizard&#39;s Guessing Game_files/harrypottergif.gif">
+            <img id="losing_gif" src="./Wizard&#39;s Guessing Game_files/avada_kedavra.gif">
+        </div>
+        <div id="game-area">
+            <!--<div class="card card1">-->
+                <!--<div class="front">-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card2">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRBvw41ebJAtnSWiOLMHTifFK4SBmVQ7nEOdq0hvvwH6ss_uAAH">-->
+                    <!--<p class="spells">Avada Kedavra</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card3">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">-->
+                    <!--<p class="spells">Expulso</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card4">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://i.ytimg.com/vi/JVGj7Bt6Gpg/maxresdefault.jpg">-->
+                    <!--<p class="spells">Expulso</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card5">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">-->
+                    <!--<p class="spells">Incendio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card6">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/95/54/18/955418ee67aa16177ed355cb23ed4e6a.jpg">-->
+                    <!--<p class="spells">Incendio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card7">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">-->
+                    <!--<p class="spells">Liberacorpus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card8">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQpxfuqWqFJ1L4UOa0hI4Aza5kQpFPBwRB4lvaRAnMk0o911qf-1A">-->
+                    <!--<p class="spells">Liberacorpus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card9">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">-->
+                    <!--<p class="spells">Stupefy</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card10">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://pre09.deviantart.net/3eaa/th/pre/i/2010/190/7/4/red_lightning_by_c_saur.jpg">-->
+                    <!--<p class="spells">Stupefy</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card11">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">-->
+                    <!--<p class="spells">Rennervate</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card12">-->
+                <!--<div class="front">-->
+                    <!--<img src="http://previews.123rf.com/images/argus456/argus4561208/argus456120800302/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg">-->
+                    <!--<p class="spells">Rennervate</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card13">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">-->
+                    <!--<p class="spells">Expelliarmus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card14">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3ix-Ft9RnHHlr7deRdEEU88BssHjtm7p2vu0UP7DCCsDvvNGMFw">-->
+                    <!--<p class="spells">Expelliarmus</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card15">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">-->
+                    <!--<p class="spells">Crucio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card16">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://thumbs.dreamstime.com/t/fog-grey-room-29359952.jpg">-->
+                    <!--<p class="spells">Crucio</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card17">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">-->
+                    <!--<p class="spells">Finite Incantatum</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="card card18">-->
+                <!--<div class="front">-->
+                    <!--<img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRp6njQYjNkojL5OS55DqPazJmZEK-zg9i82mO4ChmMID3hwSqS">-->
+                    <!--<p class="spells">Finite Incantatum</p>-->
+                <!--</div>-->
+                <!--<div class="back">-->
+                    <!--<img src="https://s-media-cache-ak0.pinimg.com/originals/19/eb/08/19eb08414ec401d927c97a2e6a262c2f.jpg">-->
+                <!--</div>-->
+            <!--</div>-->
+        <div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images"><p class="spells">Expelliarmus</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/red_lightning_by_c_saur.jpg"><p class="spells">Stupefy1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg"><p class="spells">Rennervate1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images"><p class="spells">Expelliarmus1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/maxresdefault.jpg"><p class="spells">Expulso</p></div><div class="back" style="display: block;"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/955418ee67aa16177ed355cb23ed4e6a.jpg"><p class="spells">Incendio1</p></div><div class="back" style="display: block;"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/maxresdefault.jpg"><p class="spells">Expulso1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/14840472-Green-and-fresh-background-with-soft-highlights-and-lines-Stock-Photo.jpg"><p class="spells">Rennervate</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(1)"><p class="spells">Avada Kedavra1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(2)"><p class="spells">Finite Incantatum</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/red_lightning_by_c_saur.jpg"><p class="spells">Stupefy</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/fog-grey-room-29359952.jpg"><p class="spells">Crucio</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(2)"><p class="spells">Finite Incantatum1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(1)"><p class="spells">Avada Kedavra</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(3)"><p class="spells">Liberacorpus</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/images(3)"><p class="spells">Liberacorpus1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/fog-grey-room-29359952.jpg"><p class="spells">Crucio1</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div><div class="card"><div class="front"><img src="./Wizard&#39;s Guessing Game_files/955418ee67aa16177ed355cb23ed4e6a.jpg"><p class="spells">Incendio</p></div><div class="back"><img src="./Wizard&#39;s Guessing Game_files/19eb08414ec401d927c97a2e6a262c2f.jpg"></div></div></div>
+    </div>
+    <audio autoplay="" loop="">
+        <source src="./photo/5ebb3487fc8ec53df94d23e796c02755.mp3" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+</body></html>
