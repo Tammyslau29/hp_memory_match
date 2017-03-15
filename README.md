@@ -13,7 +13,7 @@
 
 ## Features
 Feature Name | Description
----|---| ---
+---|---
 **Multiplayer** | Ability to add up to two players
 **Two Player Battle**|Each card matched deals differing amounts of damage to the opponent, while other cards give back health. 
 
