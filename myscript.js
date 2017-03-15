@@ -579,3 +579,13 @@ function open_settings(){
 function open_shareable(){
     $(".id_container").toggle();
 }
+function open_spells(){
+        $("#spells_dropdown").text("Hide Spell List");
+        $(".reset_button").hide();
+        $(".new_spell_list").css("display", "inline-block")
+}
+function close_spells() {
+    $(".reset_button").show();
+    $(".new_spell_list").css("display", "none")
+    $("#spells_dropdown").text("Show Spell List");
+}

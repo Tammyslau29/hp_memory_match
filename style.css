@@ -10,10 +10,12 @@
     font-family:parsel;
     src: url('font/PARSELTO.TTF')
 }
+.media_query_text{
+    display: none;
+}
 .guessing_game_body {
     background-image: url("http://corporate.comcast.com/images/harry-potter-hogwarts-hollywood-universal-2.jpg");
     background-repeat: no-repeat;
-    background-size: cover;
 }
 .game_header h1, .game_nav{
     margin: 0 auto;
@@ -273,44 +275,43 @@
 .character_cont{
     background-color: red;
     display: inline-block;
-    transform: translate(50%,0%);
-    width: 150px;
-    margin: 10px;
-    height: 200px;
+    margin: 18px;
+    height: 185px;
+    flex: 1 1 18%;
 }
 .character_img{
    height:100%;
     width: 100%;
 }
 .character_name{
+    margin-top: 0;
     text-align: center;
     font-family: 'Cormorant Garamond', serif;
     color: white;
 }
 .character_display{
+    transform: translate(30%,-14%);
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
     width: 60vw;
-    margin: 0;
 }
 .start_game_btn{
-    width: 164px;
+    flex: 1 1 20%;
     height: 63px;
-    right: 146px;
-    position: absolute;
-    top: 200px;
     font-size: 20px;
     font-family: harryP;
     background-color: #b54646;
     color: white;
 }
 .choose_a_char{
+    flex: 1 1 70%;
     width: 30vw;
     font-family: lumos;
     font-size: 2.5em;
     display: inline;
     color: white;
-    position: absolute;
-    right: 10%;
-    top: 30%;
+    text-align: center;
 }
 .new_game, .join_game{
     width: 164px;
@@ -375,4 +376,30 @@ input.input_game_id{
     color: white;
     font-family: lumos;
     font-size: 17px;
+}
+.new_spell_list{
+    display: none;
+    background-color: rgba(0, 0, 0, 0.72);
+    color: white;
+    border-radius: 10px;
+}
+@media screen and (max-width: 1142px){
+    .choose_a_char{
+        font-size: 2.0em;
+    }
+}
+@media screen and (max-width: 1024px){
+    .media_query_text{
+        margin: 5px;
+        color: #F44336;
+        position: absolute;
+        top: 33%;
+        font-size: 2em;
+        font-family: lumos;
+        display: inline-block;
+        background-color: rgba(0, 0, 0, 0.52);
+    }
+    .multiplayer_option, .game_header, .new_game{
+        display:none;
+    }
 }

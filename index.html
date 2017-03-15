@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Wizard's Guessing Game</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="myscript.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
 </head>
 <body class="guessing_game_body">
+    <div class="media_query_text">My apologies. Currently, Harry Potter Memory Match is not optimized for screens smaller than 1024px.</div>
     <header class="game_header">
         <img class="hp_logo" src="http://vignette3.wikia.nocookie.net/logopedia/images/9/9c/HarryPotter.png/revision/latest?cb=20160624203951">
         <h1>and the Great Duel</h1>
@@ -48,7 +49,6 @@
             <ul>
                 <a href="#"><li><button onclick="open_shareable()" class="dropbtn" id="player_2_code">Get Player 2 Code</button></li></a>
                 <a href="#"><li><button onclick="open_settings()" class="dropbtn">settings</button></li></a>
-                    <!--<a href="about.html"><li>about</li></a>-->
             </ul>
         </nav>
         <div id="myDropdown" class="music_controls dropdown-content">
@@ -66,10 +66,10 @@
         </div>
         <button type="button" class="new_game" onclick="load_players()">Start New Duel</button>
     </div>
-    <div class="choose_a_char">
-        Choose a Character
-    </div>
     <div class="character_display">
+        <div class="choose_a_char">
+            Choose a Character
+        </div>
         <button type="button" class="start_game_btn" onclick="checks_player2()">Challenge Duel!</button>
     </div>
     <div class="game-body">
@@ -90,7 +90,11 @@
                     <div class="opponent_last_spell"></div>
                 </div>
             </div>
+            <a href="#"><button onclick="open_spells()" class="dropbtn" id="spells_dropdown">Show Spell List
+            </button></a>
             <ul class="new_spell_list">
+                <a href="#"><button onclick="close_spells()" class="dropbtn">Close
+                </button></a>
                 <li>Spells and their results:
                     <ul>
                         <li>Avada Kedavra - Automatic kill and ends the game.</li>
