@@ -47,7 +47,7 @@
     display: inline-block;
     margin: 3px 0px 0px 20px;
     color: white;
-    right: 200px;
+    right: 250px;
     top: 14px;
 }
 .value, .label {
@@ -120,9 +120,12 @@
     left:0;
 }
 .spells {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    padding: 10px;
     position:absolute;
     font-family: parsel;
-    font-size: 28px;
+    font-size: 1.3em;
     color:white;
     top: 37%;
     left: 50%;
@@ -192,11 +195,22 @@
 .about_nav ul a {
     text-decoration: none;
 }
-#winning_gif, #losing_gif {
+#winning_gif, #losing_gif, .losing_text {
     display: none;
     position: absolute;
     z-index: 20;
     left: 43%;
+}
+.losing_text{
+    top: 80vh;
+    right: 50vh;
+    position: absolute;
+    text-shadow: 3px 2px black;
+    letter-spacing: 5px;
+    color: green;
+    display: block;
+    font-family: harryP;
+    font-size: 50px;
 }
 #losing_gif{
     display: none;
@@ -383,6 +397,11 @@ input.input_game_id{
     color: white;
     border-radius: 10px;
 }
+#spells_dropdown{
+    font-family: harryP;
+    cursor: pointer;
+    font-size: 30px;
+}
 @media screen and (max-width: 1142px){
     .choose_a_char{
         font-size: 2.0em;
@@ -399,7 +418,7 @@ input.input_game_id{
         display: inline-block;
         background-color: rgba(0, 0, 0, 0.52);
     }
-    .multiplayer_option, .game_header, .new_game{
+    .multiplayer_option, .game_header, .new_game, .game-body{
         display:none;
     }
 }

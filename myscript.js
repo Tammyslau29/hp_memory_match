@@ -78,7 +78,7 @@ function init_game(){
     $(".game-body").show();
     $(".current_player").show();
     // $(".id_container").show();
-    new_shuffle();
+    shuffle();
 }
 /**
  * when game is initialized, current player is set to 1
@@ -311,7 +311,7 @@ function reset_button() {
     $(".card .back").show();
     $("#winning_gif").hide();
     $("#losing_gif").hide();
-    new_shuffle(true);
+    shuffle(true);
     init_score_to_db();
     display_score()
 }
@@ -344,7 +344,7 @@ function build_player_character(player, player_icon){
 /**
  * shuffle function that checks if game has been initialized or reset button was pressed
  */
-function new_shuffle(reset){
+function shuffle(reset){
     var makeArray = [];
     var swap_card;
     var sub_card;
@@ -469,6 +469,22 @@ function display_last_card(second_card_clicked){
 }
 
 function auto_kill(){
+        if(player == 2){
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+                var new_player_score = snapshot.val().player1_score;
+                new_player_score -= new_player_score
+                fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player1_score:new_player_score})
+            });
+        }else if(player == 1){
+            fb_ref.ref("games_in_session/" + game_id + "/player_score").once("value", function(snapshot){
+                var new_player_score = snapshot.val().player2_score;
+                new_player_score -= new_player_score
+
+                fb_ref.ref("games_in_session/" + game_id + "/player_score").update({player2_score:new_player_score})
+            });
+        }
+    display_score()
+    $(".losing_text").show();
     $("#losing_gif").show();
     $(".card").hide();
 }
@@ -580,7 +596,7 @@ function open_shareable(){
     $(".id_container").toggle();
 }
 function open_spells(){
-        $("#spells_dropdown").text("Hide Spell List");
+        $("#spells_dropdown").text("");
         $(".reset_button").hide();
         $(".new_spell_list").css("display", "inline-block")
 }
