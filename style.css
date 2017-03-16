@@ -43,7 +43,7 @@
 }
 .stats_container {
     position: absolute;
-    width: 150px;
+    width: 200px;
     display: inline-block;
     margin: 3px 0px 0px 20px;
     color: white;
@@ -208,7 +208,6 @@
     text-shadow: 3px 2px black;
     letter-spacing: 5px;
     color: green;
-    display: block;
     font-family: harryP;
     font-size: 50px;
 }
